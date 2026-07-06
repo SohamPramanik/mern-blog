@@ -48,7 +48,7 @@ function PostCard({ post }) {
         <div style={{ marginTop: "10px" }}>
           {post.media.match(/\.(mp4|webm|ogg)$/i) ? (
             <video
-              src={`http://localhost:5000/uploads/${post.media}`}
+              src={`https://mern-blog-backend-0igg.onrender.com/uploads/${post.media}`}
               controls
               style={{
                 width: "100%",
@@ -58,7 +58,7 @@ function PostCard({ post }) {
             />
           ) : (
             <img
-              src={`http://localhost:5000/uploads/${post.media}`}
+              src={`https://mern-blog-backend-0igg.onrender.com/uploads/${post.media}`}
               alt="post media"
               style={{
                 width: "100%",
