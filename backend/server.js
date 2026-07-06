@@ -1,18 +1,23 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
-
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 const path = require("path");
 
-app.use("/uploads", express.static(path.join(__dirname,"uploads")));
-app.use(cors());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 connectDB();
