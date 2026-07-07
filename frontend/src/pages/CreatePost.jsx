@@ -84,11 +84,11 @@ function CreatePost() {
             required
           />
 
-          <input
+          {/* <input
             type="file"
             accept="image/*,video/*"
             onChange={handleFileChange}
-          />
+          /> */}
 
           <div className="media-upload">
             <label className="upload-btn">
