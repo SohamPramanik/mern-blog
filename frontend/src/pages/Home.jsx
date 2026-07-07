@@ -1,56 +1,58 @@
 import { useNavigate } from "react-router-dom";
+import "./Home.css";
 
 function Home() {
   const navigate = useNavigate();
 
   return (
     <div className="home">
+      <div className="bg-gradient"></div>
+      <div className="blob blob1"></div>
+      <div className="blob blob2"></div>
+      <div className="blob blob3"></div>
+
       <section className="hero">
-        <div className="hero-content">
-          <span className="hero-badge">✦ Modern Publishing Platform</span>
+        <span className="badge"> INSPIRED EXPERIENCE</span>
 
-          <h1>
-            Where Great Ideas
-            <br />
-            Find Their Voice.
-          </h1>
+        <h1>
+          Think.
+          <br />
+          Write.
+          <br />
+          Inspire.
+        </h1>
 
-          <p>
-            Explore thoughtfully crafted articles on technology, design,
-            software development, productivity, and innovation. Share your
-            knowledge, inspire others, and become part of a growing community of
-            passionate creators.
-          </p>
+        <p>
+          A beautifully crafted space where ideas become stories, and stories
+          become inspiration. Designed for creators who believe words deserve
+          elegance.
+        </p>
 
-          <div className="hero-buttons">
-            <button className="primary-btn" onClick={() => navigate("/blogs")}>
-              Explore Articles
-            </button>
+        <div className="buttons">
+          <button className="primary" onClick={() => navigate("/blogs")}>
+            Explore Stories
+          </button>
 
-            <button
-              className="secondary-btn"
-              onClick={() => navigate("/create")}
-            >
-              Start Writing
-            </button>
+          <button className="secondary" onClick={() => navigate("/create")}>
+            Start Writing
+          </button>
+        </div>
+
+        <div className="stats">
+          <div>
+            <h2>1K+</h2>
+            <span>Articles</span>
           </div>
-        </div>
-      </section>
 
-      <section className="stats">
-        <div className="stat-card">
-          <h2>1K+</h2>
-          <span>Published Articles</span>
-        </div>
+          <div>
+            <h2>500+</h2>
+            <span>Creators</span>
+          </div>
 
-        <div className="stat-card">
-          <h2>500+</h2>
-          <span>Writers</span>
-        </div>
-
-        <div className="stat-card">
-          <h2>20K+</h2>
-          <span>Monthly Readers</span>
+          <div>
+            <h2>20K+</h2>
+            <span>Readers</span>
+          </div>
         </div>
       </section>
     </div>
