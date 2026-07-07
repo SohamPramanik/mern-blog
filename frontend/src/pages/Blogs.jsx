@@ -10,20 +10,22 @@ function Blogs() {
   }, []);
 
   const fetchPosts = async () => {
-    try {
-      console.log("API URL:", import.meta.env.VITE_API_URL);
+  try {
+    console.log("API URL:", import.meta.env.VITE_API_URL);
 
-      const res = await API.get("/posts");
+    const res = await API.get("/posts");
 
-      console.log("Posts:", res.data);
+    console.log("Response:", res);
 
-      setPosts(res.data);
-    } catch (err) {
-      console.log("Fetch failed:");
-      console.log(err);
-      console.log(err.response);
-    }
-  };
+    console.log("Data:", res.data);
+
+    setPosts(res.data);
+  } catch (err) {
+    console.log("ERROR");
+    console.log(err);
+    console.log(err.response);
+  }
+};
 
   return (
     <div className="container">
