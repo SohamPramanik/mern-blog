@@ -7,30 +7,31 @@ function Home() {
     <div className="home">
       <section className="hero">
         <div className="hero-content">
-          <span className="hero-badge">✨ Welcome to SohamBlog</span>
+          <span className="hero-badge">✦ Modern Publishing Platform</span>
 
           <h1>
-            Discover Amazing
+            Where Great Ideas
             <br />
-            Stories & Ideas
+            Find Their Voice.
           </h1>
 
           <p>
-            Read articles from developers, students, designers and creators.
-            Learn something new every day and share your own knowledge with the
-            world.
+            Explore thoughtfully crafted articles on technology, design,
+            software development, productivity, and innovation. Share your
+            knowledge, inspire others, and become part of a growing community of
+            passionate creators.
           </p>
 
           <div className="hero-buttons">
             <button className="primary-btn" onClick={() => navigate("/blogs")}>
-              Start Reading →
+              Explore Articles
             </button>
 
             <button
               className="secondary-btn"
               onClick={() => navigate("/create")}
             >
-              Write a Blog
+              Start Writing
             </button>
           </div>
         </div>
@@ -38,18 +39,18 @@ function Home() {
 
       <section className="stats">
         <div className="stat-card">
-          <h2>1000+</h2>
-          <span>Articles</span>
+          <h2>1K+</h2>
+          <span>Published Articles</span>
         </div>
 
         <div className="stat-card">
           <h2>500+</h2>
-          <span>Authors</span>
+          <span>Writers</span>
         </div>
 
         <div className="stat-card">
           <h2>20K+</h2>
-          <span>Readers</span>
+          <span>Monthly Readers</span>
         </div>
       </section>
     </div>
