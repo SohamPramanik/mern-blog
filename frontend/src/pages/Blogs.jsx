@@ -11,11 +11,17 @@ function Blogs() {
 
   const fetchPosts = async () => {
     try {
+      console.log("API URL:", import.meta.env.VITE_API_URL);
+
       const res = await API.get("/posts");
+
+      console.log("Posts:", res.data);
 
       setPosts(res.data);
     } catch (err) {
+      console.log("Fetch failed:");
       console.log(err);
+      console.log(err.response);
     }
   };
 
