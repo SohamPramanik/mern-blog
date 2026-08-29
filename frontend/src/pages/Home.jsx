@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import {
   ArrowRight,
   PenLine,
@@ -44,12 +45,14 @@ export default function Home() {
   return (
     <main className="ink-home">
       {/* ================= BACKGROUND ================= */}
-      ```
+
       <div className="ink-grid" />
       <div className="ink-orb ink-orb-one" />
       <div className="ink-orb ink-orb-two" />
       <div className="ink-orb ink-orb-three" />
+
       {/* ================= HERO ================= */}
+
       <section className="ink-hero">
         <div className="ink-hero-glow" />
 
@@ -94,7 +97,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Floating cards */}
+        {/* Floating Cards */}
 
         <div className="ink-floating-card ink-card-left">
           <div className="floating-icon">
@@ -117,18 +120,23 @@ export default function Home() {
           <p>More stories discovered this month.</p>
         </div>
       </section>
+
       {/* ================= STATS ================= */}
+
       <section className="ink-stats-section">
         <div className="ink-stats">
           {stats.map((stat, index) => (
             <div className="ink-stat" key={index}>
               <h2>{stat.number}</h2>
+
               <span>{stat.label}</span>
             </div>
           ))}
         </div>
       </section>
+
       {/* ================= FEATURE SECTION ================= */}
+
       <section className="ink-features">
         <div className="ink-section-heading">
           <span className="section-tag">
@@ -165,7 +173,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
       {/* ================= EXPERIENCE SECTION ================= */}
+
       <section className="ink-experience">
         <div className="ink-experience-content">
           <div className="experience-label">
@@ -220,6 +230,7 @@ export default function Home() {
               <div className="draft-footer">
                 <div className="draft-author">
                   <div className="author-avatar">I</div>
+
                   <span>InkWhisper Writer</span>
                 </div>
 
@@ -232,7 +243,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       {/* ================= CTA ================= */}
+
       <section className="ink-cta">
         <div className="ink-cta-glow" />
 
@@ -257,7 +270,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
       {/* ================= FOOTER ================= */}
+
       <footer className="ink-footer">
         <div className="footer-brand">
           <Feather size={19} />
