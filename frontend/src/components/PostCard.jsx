@@ -17,11 +17,16 @@ function PostCard({ post }) {
   const getMediaUrl = (media) => {
     if (!media) return null;
 
+    // Already a full URL
     if (media.startsWith("http://") || media.startsWith("https://")) {
       return media;
     }
 
-    return `http://localhost:5000/uploads/${media}`;
+    const backendUrl =
+      import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+    // If database stores only filename
+    return `${backendUrl}/uploads/${media}`;
   };
 
   const mediaUrl = getMediaUrl(post.media);
@@ -82,12 +87,8 @@ function PostCard({ post }) {
       {mediaUrl && (
         <div className="post-media-container">
           {isVideo ? (
-            <video
-              src={mediaUrl}
-              className="post-media"
-              controls
-              preload="metadata"
-            >
+            <video className="post-media" controls preload="metadata">
+              <source src={mediaUrl} />
               Your browser does not support video.
             </video>
           ) : (
@@ -97,7 +98,7 @@ function PostCard({ post }) {
               className="post-media"
               onError={(e) => {
                 console.error("Media failed to load:", mediaUrl);
-                e.currentTarget.style.display = "none";
+                console.error("Post media value:", post.media);
               }}
             />
           )}

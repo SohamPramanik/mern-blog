@@ -258,3 +258,19 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.post-media-container {
+  width: 100%;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f3f5f4;
+  border: 1px solid #e5e9e6;
+}
+
+.post-media {
+  width: 100%;
+  max-height: 500px;
+  display: block;
+  object-fit: contain;
+  background: #f8faf9;
+}
