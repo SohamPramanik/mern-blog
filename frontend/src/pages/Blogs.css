@@ -1,530 +1,200 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap");
-
-/* =========================================
-   INKWHISPER — BLOGS PAGE
-========================================= */
-
 .blogs-page {
-  --blogs-bg: #090909;
-  --blogs-surface: #111111;
-  --blogs-text: #f5f2eb;
-  --blogs-muted: #97938c;
-  --blogs-border: rgba(255, 255, 255, 0.09);
-  --blogs-accent: #d6a75f;
-  --blogs-accent-soft: #f0c98c;
-
-  position: relative;
-
   min-height: 100vh;
-
-  overflow: hidden;
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(214, 167, 95, 0.08),
-      transparent 28%
-    ),
-    var(--blogs-bg);
-
-  color: var(--blogs-text);
-
-  font-family: "Manrope", sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-/* =========================================
-   BACKGROUND
-========================================= */
-
-.blogs-grid {
-  position: absolute;
-
-  inset: 0;
-
-  pointer-events: none;
-
-  opacity: 0.28;
-
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-
-  background-size: 70px 70px;
-
-  mask-image: linear-gradient(
-    to bottom,
-    black 0%,
-    rgba(0, 0, 0, 0.5) 35%,
-    transparent 75%
-  );
-
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    black 0%,
-    rgba(0, 0, 0, 0.5) 35%,
-    transparent 75%
-  );
-}
-
-.blogs-glow {
-  position: absolute;
-
-  border-radius: 50%;
-
-  filter: blur(130px);
-
-  pointer-events: none;
-
-  opacity: 0.18;
-}
-
-.blogs-glow-one {
-  width: 450px;
-  height: 450px;
-
-  top: 80px;
-  left: -220px;
-
-  background: #c78c3d;
-}
-
-.blogs-glow-two {
-  width: 400px;
-  height: 400px;
-
-  top: 600px;
-  right: -200px;
-
-  background: #563773;
-}
-
-/* =========================================
+/* =========================
    HERO
-========================================= */
+========================= */
 
 .blogs-hero {
-  position: relative;
-
-  z-index: 2;
-
-  padding: 140px 24px 90px;
-
+  padding: 70px 20px 45px;
   text-align: center;
 }
 
 .blogs-hero-content {
-  max-width: 850px;
-
-  margin: 0 auto;
+  max-width: 720px;
+  margin: auto;
 }
 
-.blogs-eyebrow {
-  display: inline-flex;
+.blogs-tag {
+  display: inline-block;
 
-  align-items: center;
+  padding: 7px 13px;
 
-  gap: 9px;
+  background: #eaf6ed;
+  color: #4f8f60;
 
-  padding: 10px 17px;
+  border-radius: 20px;
 
-  border: 1px solid rgba(214, 167, 95, 0.25);
-
-  border-radius: 999px;
-
-  background: rgba(214, 167, 95, 0.06);
-
-  color: var(--blogs-accent-soft);
-
-  font-size: 11px;
-
+  font-size: 0.7rem;
   font-weight: 700;
 
-  letter-spacing: 0.1em;
-
-  text-transform: uppercase;
-
-  backdrop-filter: blur(15px);
-
-  animation: blogsFadeUp 0.7s ease both;
+  letter-spacing: 1px;
 }
 
 .blogs-hero h1 {
-  margin: 30px auto 0;
+  margin: 18px 0 12px;
 
-  max-width: 850px;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 750;
 
-  font-family: "Playfair Display", serif;
+  letter-spacing: -1.5px;
 
-  font-size: clamp(3.8rem, 8vw, 7rem);
-
-  font-weight: 600;
-
-  line-height: 0.98;
-
-  letter-spacing: -0.06em;
-
-  animation: blogsFadeUp 0.8s ease both;
-
-  animation-delay: 0.08s;
-}
-
-.blogs-hero h1 span {
-  display: block;
-
-  font-style: italic;
-
-  font-weight: 500;
-
-  color: var(--blogs-accent-soft);
+  color: var(--text-primary);
 }
 
 .blogs-hero p {
-  max-width: 650px;
+  max-width: 600px;
+  margin: auto;
 
-  margin: 30px auto 0;
+  color: var(--text-secondary);
 
-  color: var(--blogs-muted);
-
-  font-size: 1.05rem;
-
-  line-height: 1.9;
-
-  animation: blogsFadeUp 0.8s ease both;
-
-  animation-delay: 0.16s;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
-/* =========================================
+/* =========================
    SEARCH
-========================================= */
+========================= */
 
 .blogs-search {
   display: flex;
-
   align-items: center;
-
-  gap: 12px;
+  gap: 10px;
 
   max-width: 580px;
 
-  margin: 42px auto 0;
+  margin: 28px auto 0;
 
-  padding: 4px 18px;
+  padding: 0 16px;
 
-  border: 1px solid var(--blogs-border);
+  height: 52px;
 
-  border-radius: 16px;
+  background: var(--bg-secondary);
 
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 12px;
 
-  color: var(--blogs-muted);
-
-  backdrop-filter: blur(18px);
-
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
-
-  animation: blogsFadeUp 0.8s ease both;
-
-  animation-delay: 0.24s;
-}
-
-.blogs-search:focus-within {
-  border-color: rgba(214, 167, 95, 0.45);
-
-  background: rgba(255, 255, 255, 0.05);
-
-  box-shadow: 0 0 0 4px rgba(214, 167, 95, 0.06);
+  box-shadow: 0 5px 20px rgba(40, 80, 50, 0.05);
 }
 
 .blogs-search svg {
-  color: var(--blogs-accent);
+  color: #5c9c6b;
 }
 
 .blogs-search input {
   width: 100%;
 
-  padding: 16px 0;
-
-  margin: 0;
-
   border: none;
-
   outline: none;
 
   background: transparent;
 
-  color: var(--blogs-text);
+  color: var(--text-primary);
 
-  font-family: "Manrope", sans-serif;
-
-  font-size: 14px;
-
-  box-shadow: none;
-}
-
-.blogs-search input:focus {
-  border: none;
-
-  outline: none;
-
-  box-shadow: none;
-
-  background: transparent;
+  font-size: 0.95rem;
 }
 
 .blogs-search input::placeholder {
-  color: #77736d;
+  color: var(--text-muted);
 }
 
-/* =========================================
+/* =========================
    CONTENT
-========================================= */
+========================= */
 
 .blogs-content {
-  position: relative;
+  width: min(900px, calc(100% - 40px));
 
-  z-index: 2;
+  margin: auto;
 
-  width: min(1200px, calc(100% - 48px));
-
-  margin: 0 auto;
-
-  padding: 40px 0 120px;
+  padding: 35px 0 80px;
 }
 
-.blogs-content-header {
+/* =========================
+   HEADER
+========================= */
+
+.blogs-header {
   display: flex;
 
-  align-items: flex-end;
+  align-items: end;
   justify-content: space-between;
 
-  gap: 30px;
-
-  margin-bottom: 45px;
-
-  padding-bottom: 28px;
-
-  border-bottom: 1px solid var(--blogs-border);
+  margin-bottom: 25px;
 }
 
-.blogs-section-label {
-  display: inline-flex;
+.blogs-small-title {
+  display: block;
 
-  align-items: center;
+  margin-bottom: 6px;
 
-  gap: 8px;
+  color: #5c9c6b;
 
-  color: var(--blogs-accent);
-
-  font-size: 11px;
-
+  font-size: 0.7rem;
   font-weight: 700;
 
-  letter-spacing: 0.14em;
+  letter-spacing: 1.5px;
 }
 
-.blogs-content-header h2 {
-  margin-top: 15px;
-
-  font-family: "Playfair Display", serif;
-
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-
-  font-weight: 600;
-
-  line-height: 1;
-
-  letter-spacing: -0.045em;
-
-  color: var(--blogs-text);
+.blogs-header h2 {
+  font-size: 2rem;
+  color: var(--text-primary);
 }
 
 .blogs-count {
-  padding: 10px 15px;
+  padding: 8px 13px;
 
-  border: 1px solid var(--blogs-border);
+  background: #eaf6ed;
 
-  border-radius: 999px;
-
-  color: var(--blogs-muted);
-
-  background: rgba(255, 255, 255, 0.025);
-
-  font-family: "DM Mono", monospace;
-
-  font-size: 11px;
-}
-
-/* =========================================
-   POSTS
-========================================= */
-
-.blogs-posts {
-  display: grid;
-
-  gap: 24px;
-}
-
-.blogs-post-wrapper {
-  opacity: 0;
-
-  animation: blogsFadeUp 0.6s ease forwards;
-}
-
-/* Override old PostCard styles inside blogs page */
-
-.blogs-page .card {
-  margin-bottom: 0;
-
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.055),
-    rgba(255, 255, 255, 0.018)
-  );
-
-  border: 1px solid var(--blogs-border);
+  color: #4f8f60;
 
   border-radius: 20px;
 
-  box-shadow: none;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
-.blogs-page .card:hover {
-  transform: translateY(-6px);
+/* =========================
+   POSTS
+========================= */
 
-  border-color: rgba(214, 167, 95, 0.35);
-
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+.blogs-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.blogs-page .card h2 {
-  color: var(--blogs-text);
-
-  font-family: "Playfair Display", serif;
-}
-
-.blogs-page .card h2:hover {
-  color: var(--blogs-accent-soft);
-}
-
-.blogs-page .card p {
-  color: var(--blogs-muted);
-}
-
-.blogs-page .card img,
-.blogs-page .card video {
-  border-color: var(--blogs-border);
-}
-
-/* =========================================
+/* =========================
    LOADING
-========================================= */
+========================= */
 
 .blogs-loading {
-  display: flex;
+  min-height: 300px;
 
+  display: flex;
   flex-direction: column;
 
   align-items: center;
   justify-content: center;
 
-  min-height: 300px;
+  gap: 15px;
 
-  gap: 18px;
-
-  color: var(--blogs-muted);
-
-  font-size: 14px;
+  color: var(--text-secondary);
 }
 
-.loading-ring {
-  width: 38px;
-  height: 38px;
+.loading-spinner {
+  width: 34px;
+  height: 34px;
 
-  border: 2px solid rgba(214, 167, 95, 0.15);
-
-  border-top-color: var(--blogs-accent);
+  border: 3px solid #dceee0;
+  border-top-color: #5c9c6b;
 
   border-radius: 50%;
 
   animation: spin 0.8s linear infinite;
-}
-
-/* =========================================
-   EMPTY STATE
-========================================= */
-
-.blogs-empty {
-  max-width: 600px;
-
-  margin: 70px auto;
-
-  padding: 60px 30px;
-
-  text-align: center;
-
-  border: 1px solid var(--blogs-border);
-
-  border-radius: 24px;
-
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.empty-icon {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  width: 65px;
-  height: 65px;
-
-  margin: 0 auto 25px;
-
-  border-radius: 50%;
-
-  color: var(--blogs-accent-soft);
-
-  background: rgba(214, 167, 95, 0.08);
-
-  border: 1px solid rgba(214, 167, 95, 0.15);
-}
-
-.blogs-empty h3 {
-  margin-bottom: 12px;
-
-  font-family: "Playfair Display", serif;
-
-  font-size: 1.8rem;
-
-  font-weight: 600;
-}
-
-.blogs-empty p {
-  color: var(--blogs-muted);
-
-  line-height: 1.7;
-}
-
-/* =========================================
-   ANIMATIONS
-========================================= */
-
-@keyframes blogsFadeUp {
-  from {
-    opacity: 0;
-
-    transform: translateY(24px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
-  }
 }
 
 @keyframes spin {
@@ -533,82 +203,55 @@
   }
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+/* =========================
+   EMPTY
+========================= */
 
-@media (max-width: 768px) {
+.blogs-empty {
+  padding: 65px 25px;
+
+  text-align: center;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.blogs-empty svg {
+  color: #5c9c6b;
+
+  margin-bottom: 15px;
+}
+
+.blogs-empty h3 {
+  margin-bottom: 8px;
+
+  color: var(--text-primary);
+}
+
+.blogs-empty p {
+  color: var(--text-secondary);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
   .blogs-hero {
-    padding: 120px 20px 70px;
-  }
-
-  .blogs-hero h1 {
-    font-size: clamp(3.4rem, 15vw, 5.5rem);
+    padding-top: 50px;
   }
 
   .blogs-content {
-    width: min(100% - 32px, 1200px);
+    width: min(100% - 28px, 900px);
   }
 
-  .blogs-content-header {
+  .blogs-header {
     align-items: flex-start;
-
-    flex-direction: column;
-  }
-
-  .blogs-count {
-    align-self: flex-start;
-  }
-
-  .blogs-glow {
-    opacity: 0.12;
-  }
-}
-
-@media (max-width: 520px) {
-  .blogs-hero {
-    padding-top: 105px;
   }
 
   .blogs-hero h1 {
-    font-size: 3.4rem;
-  }
-
-  .blogs-hero p {
-    font-size: 0.95rem;
-  }
-
-  .blogs-search {
-    margin-top: 32px;
-
-    border-radius: 14px;
-  }
-
-  .blogs-search input {
-    font-size: 13px;
-  }
-
-  .blogs-content {
-    padding-bottom: 80px;
-  }
-
-  .blogs-content-header h2 {
-    font-size: 2.7rem;
-  }
-
-  .blogs-empty {
-    margin: 40px auto;
-
-    padding: 45px 22px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .blogs-page *,
-  .blogs-page *::before,
-  .blogs-page *::after {
-    animation: none !important;
-
-    transition: none !important;
+    font-size: 2.5rem;
   }
 }

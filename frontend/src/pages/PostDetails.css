@@ -1,0 +1,149 @@
+.post-details-page {
+  min-height: calc(100vh - 70px);
+  padding: 50px 20px;
+  background: var(--bg-primary);
+}
+
+.post-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* MEDIA */
+
+.post-details-media-container {
+  width: 100%;
+  background: var(--surface-soft);
+}
+
+.post-details-media {
+  width: 100%;
+  max-height: 520px;
+
+  display: block;
+
+  object-fit: contain;
+
+  background: #000;
+}
+
+/* CONTENT */
+
+.post-details-content {
+  padding: 35px;
+}
+
+.post-details-content h1 {
+  font-size: 36px;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 22px;
+}
+
+/* META */
+
+.post-details-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.post-details-author,
+.post-details-date,
+.post-details-likes {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.details-avatar {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* DIVIDER */
+
+.post-details-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0;
+}
+
+/* TEXT */
+
+.post-details-text {
+  color: var(--text-secondary);
+
+  font-size: 16px;
+  line-height: 1.9;
+
+  white-space: pre-wrap;
+}
+
+/* LOADING */
+
+.post-details-loading,
+.post-not-found {
+  max-width: 600px;
+  margin: 100px auto;
+
+  text-align: center;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+
+  padding: 35px;
+  border-radius: 16px;
+
+  color: var(--text-secondary);
+}
+
+.post-not-found h2 {
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .post-details-page {
+    padding: 25px 15px;
+  }
+
+  .post-details-content {
+    padding: 22px;
+  }
+
+  .post-details-content h1 {
+    font-size: 27px;
+  }
+
+  .post-details-media {
+    max-height: 350px;
+  }
+
+  .post-details-meta {
+    gap: 12px;
+  }
+}

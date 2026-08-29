@@ -8,7 +8,7 @@ exports.createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
 
-    const media = req.file ? req.file.filename : null;
+    const media = req.file ? `/uploads/${req.file.filename}` : null;
 
     const post = new Post({
       title,

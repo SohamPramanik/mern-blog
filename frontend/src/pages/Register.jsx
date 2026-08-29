@@ -1,94 +1,133 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { User, Mail, Lock } from "lucide-react";
+
 import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
-function Register(){
-
+function Register() {
   const navigate = useNavigate();
 
-  const [formData,setFormData] = useState({
-    username:"",
-    email:"",
-    password:""
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
   });
 
-  const handleChange = (e)=>{
+  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
+
+    setErrorMsg("");
   };
 
-  const handleSubmit = async (e)=>{
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
+    setErrorMsg("");
+    setLoading(true);
 
-      await API.post("/auth/register",formData);
-
-      alert("Registration successful");
+    try {
+      await API.post("/auth/register", formData);
 
       navigate("/login");
-
-    }catch(error){
-
-      alert("Registration failed");
-
+    } catch (error) {
+      setErrorMsg(
+        error?.response?.data?.message ||
+          "Registration failed. Please try again.",
+      );
+    } finally {
+      setLoading(false);
     }
-
   };
 
-  return(
-
-    <div className="register-wrapper">
-
+  return (
+    <div className="register-page">
       <div className="register-card">
-
-        <h2>✨ Create Account</h2>
-
-        <form onSubmit={handleSubmit}>
-
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-          />
-
-          <button className="register-btn" type="submit">
-            🚀 Register
-          </button>
-
-        </form>
-
-        <div className="register-extra">
-          Join the SohamBlog community
+        <div className="register-header">
+          <h1>Create Account</h1>
+          <p>Join InkWhisper and start sharing your ideas.</p>
         </div>
 
+        <form onSubmit={handleSubmit}>
+          <div className="register-form-group">
+            <label>Username</label>
+
+            <div className="register-input-box">
+              <User size={18} />
+
+              <input
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="register-form-group">
+            <label>Email</label>
+
+            <div className="register-input-box">
+              <Mail size={18} />
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="register-form-group">
+            <label>Password</label>
+
+            <div className="register-input-box">
+              <Lock size={18} />
+
+              <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          {errorMsg && (
+            <div className="register-error">
+              {errorMsg}
+            </div>
+          )}
+
+          <button
+            className="register-submit-btn"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
+        </form>
+
+        <p className="register-login">
+          Already have an account?{" "}
+          <Link to="/login">Sign in</Link>
+        </p>
       </div>
-
     </div>
-
   );
-
 }
 
 export default Register;

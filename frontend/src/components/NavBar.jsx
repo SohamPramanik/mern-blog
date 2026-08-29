@@ -1,56 +1,78 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import "./NavBar.css";
 
 function NavBar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const location = useLocation();
 
-  const [theme, setTheme] = useState("light");
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-
-    setTheme(savedTheme);
-
-    document.body.setAttribute("data-theme", savedTheme);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-
-    setTheme(newTheme);
-
-    document.body.setAttribute("data-theme", newTheme);
-
-    localStorage.setItem("theme", newTheme);
-  };
+    setToken(localStorage.getItem("token"));
+  }, [location.pathname]);
 
   const logout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    setToken(null);
+    navigate("/");
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path ? "active" : "";
   };
 
   return (
-    <div className="navbar">
-      <div className="logo">InkWhisper</div>
+    <header className="navbar">
+      <div className="navbar-container">
+        {/* BRAND */}
+        <Link to="/" className="navbar-brand">
+          InkWhisper
+        </Link>
 
-      <div className="nav-links">
-        <Link to={token ? "/blogs" : "/"}>Home</Link>
-        {token && <Link to="/create">Create</Link>}
-        {token && <Link to="/profile">Profile</Link>}
-        <button onClick={toggleTheme}>
-          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-        </button>
-        {token ? (
-          <button onClick={logout}>Logout</button>
-        ) : (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        )}
+        {/* NAVIGATION */}
+        <nav className="nav-links">
+          <Link to="/" className={isActive("/")}>
+            Home
+          </Link>
+
+          <Link to="/blogs" className={isActive("/blogs")}>
+            Explore
+          </Link>
+
+          {token && (
+            <>
+              <Link to="/create" className={isActive("/create")}>
+                Write
+              </Link>
+
+              <Link to="/profile" className={isActive("/profile")}>
+                Profile
+              </Link>
+            </>
+          )}
+        </nav>
+
+        {/* ACTIONS */}
+        <div className="nav-actions">
+          {token ? (
+            <button className="logout-btn" onClick={logout} type="button">
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link to="/login" className="login-btn">
+                Sign in
+              </Link>
+
+              <Link to="/register" className="join-btn">
+                Start Writing →
+              </Link>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </header>
   );
 }
 

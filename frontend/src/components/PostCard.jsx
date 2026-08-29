@@ -1,104 +1,167 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import { Heart, Pencil, Trash2, Calendar, User } from "lucide-react";
+
 import API from "../services/api";
+
+import "./PostCard.css";
 
 function PostCard({ post }) {
   const token = localStorage.getItem("token");
 
-  const likePost = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  const [likes, setLikes] = useState(post.likes || []);
+  const [liked, setLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
 
-      await API.put(
-        `/posts/like/${post._id}`,
+  const getMediaUrl = (media) => {
+    if (!media) return null;
+
+    if (media.startsWith("http://") || media.startsWith("https://")) {
+      return media;
+    }
+
+    return `http://localhost:5000/uploads/${media}`;
+  };
+
+  const mediaUrl = getMediaUrl(post.media);
+
+  const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(post.media || "");
+
+  const handleLike = async () => {
+    if (!token) {
+      alert("Please login to like a post.");
+      return;
+    }
+
+    if (likeLoading) return;
+
+    try {
+      setLikeLoading(true);
+
+      const res = await API.put(
+        `/posts/${post._id}/like`,
         {},
         {
-          headers: { Authorization: token },
+          headers: {
+            Authorization: token,
+          },
         },
       );
 
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
+      setLikes(res.data.likes);
+
+      // Check whether current user liked the post
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Like error:", error);
+
+      alert(error.response?.data?.message || "Unable to like this post.");
+    } finally {
+      setLikeLoading(false);
     }
   };
 
-  const deletePost = async () => {
-    if (!window.confirm("Delete this post?")) return;
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this story?",
+    );
+
+    if (!confirmDelete) return;
 
     try {
-      await API.delete(`/posts/${post._id}`, {
-        headers: { Authorization: token },
-      });
-
-      window.location.reload();
+      console.log("Delete post:", post._id);
     } catch (error) {
-      alert("Error deleting post");
+      console.error(error);
     }
   };
 
   return (
-    <div className="card">
-      {/* POST TITLE */}
-      <Link to={`/post/${post._id}`}>
-        <h2>{post.title}</h2>
-      </Link>
-
-      {/* MEDIA (IMAGE / VIDEO) */}
-      {post.media && (
-        <div style={{ marginTop: "10px" }}>
-          {post.media.match(/\.(mp4|webm|ogg)$/i) ? (
+    <article className="post-card">
+      {/* MEDIA */}
+      {mediaUrl && (
+        <div className="post-media-container">
+          {isVideo ? (
             <video
-              src={`https://mern-blog-backend-0igg.onrender.com/uploads/${post.media}`}
+              src={mediaUrl}
+              className="post-media"
               controls
-              style={{
-                width: "100%",
-                borderRadius: "10px",
-                marginTop: "10px",
-              }}
-            />
+              preload="metadata"
+            >
+              Your browser does not support video.
+            </video>
           ) : (
             <img
-              src={`https://mern-blog-backend-0igg.onrender.com/uploads/${post.media}`}
-              alt="post media"
-              style={{
-                width: "100%",
-                borderRadius: "10px",
-                marginTop: "10px",
+              src={mediaUrl}
+              alt={post.title || "Post media"}
+              className="post-media"
+              onError={(e) => {
+                console.error("Media failed to load:", mediaUrl);
+                e.currentTarget.style.display = "none";
               }}
             />
           )}
         </div>
       )}
 
-      {/* POST PREVIEW */}
-      <p style={{ marginTop: "10px" }}>{post.content.substring(0, 120)}...</p>
+      <div className="post-card-content">
+        {/* TITLE */}
+        <h2>{post.title}</h2>
 
-      <p style={{ fontSize: "13px", color: "#aaa" }}>
-        {new Date(post.createdAt).toLocaleString()}
-      </p>
+        {/* CONTENT */}
+        <p className="post-description">{post.content}</p>
 
-      {/* AUTHOR */}
-      <p>
-        <b>Author:</b> {post.author?.username}
-      </p>
+        {/* META */}
+        <div className="post-meta">
+          <div className="post-author">
+            <div className="author-avatar">
+              <User size={15} />
+            </div>
 
-      <button className="like-btn" onClick={likePost}>
-        ❤️ {post.likes?.length || 0}
-      </button>
+            <span>{post.author?.username || "Anonymous"}</span>
+          </div>
 
-      {/* ACTION BUTTONS */}
-      {token && (
-        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-          <Link to={`/edit/${post._id}`}>
-            <button className="edit-btn">Edit</button>
+          <div className="post-date">
+            <Calendar size={14} />
+
+            <span>
+              {post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString()
+                : ""}
+            </span>
+          </div>
+        </div>
+
+        {/* ACTIONS */}
+        <div className="post-actions">
+          <button
+            className={`like-btn ${liked ? "liked" : ""}`}
+            onClick={handleLike}
+            disabled={likeLoading}
+          >
+            <Heart size={17} fill={liked ? "currentColor" : "none"} />
+
+            <span>{likes.length}</span>
+          </button>
+
+          <Link to={`/post/${post._id}`} className="read-btn">
+            Read more
           </Link>
 
-          <button className="delete-btn" onClick={deletePost}>
-            Delete
-          </button>
+          {token && (
+            <div className="post-owner-actions">
+              <Link to={`/edit/${post._id}`} className="icon-btn edit-btn">
+                <Pencil size={16} />
+              </Link>
+
+              <button className="icon-btn delete-btn" onClick={handleDelete}>
+                <Trash2 size={16} />
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </article>
   );
 }
 

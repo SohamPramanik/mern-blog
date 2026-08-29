@@ -1,108 +1,117 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+
 import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
+
+    setErrorMsg("");
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
+
+    setLoading(true);
     setErrorMsg("");
 
     try {
-
       const res = await API.post("/auth/login", formData);
 
       localStorage.setItem("token", res.data.token);
 
-      // show success toast
-      setShowSuccess(true);
-
-      setTimeout(() => {
-        navigate("/Blogs");
-      }, 1500);
-
+      navigate("/blogs");
     } catch (error) {
-
-      setErrorMsg("Login failed. Check your email or password.");
-
+      setErrorMsg(
+        error?.response?.data?.message ||
+          "Login failed. Please check your email and password.",
+      );
+    } finally {
+      setLoading(false);
     }
-
   };
 
   return (
-
-    <div className="login-wrapper">
-
-      {/* SUCCESS TOAST */}
-      {showSuccess && (
-        <div className="success-toast">
-          <span className="success-icon">👍</span>
-          Login Successful
-        </div>
-      )}
-
+    <div className="login-page">
       <div className="login-card">
-
-        <h2>⚡ Login</h2>
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to continue to InkWhisper.</p>
+        </div>
 
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
+            <div className="input-box">
+              <Mail size={18} />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-          />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-          <button className="login-btn" type="submit">
-            🚀 Login
+          <div className="form-group">
+            <label>Password</label>
+
+            <div className="input-box">
+              <Lock size={18} />
+
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+
+              <button
+                type="button"
+                className="password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {errorMsg && <div className="login-error">{errorMsg}</div>}
+
+          <button type="submit" className="login-submit-btn" disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-
         </form>
 
-        {errorMsg && (
-          <p style={{ color: "#ff6b6b", marginTop: "10px" }}>
-            {errorMsg}
-          </p>
-        )}
-
-        <div className="login-extra">
-          Welcome back to SohamBlog
-        </div>
-
+        <p className="login-register">
+          Don't have an account? <Link to="/register">Create one</Link>
+        </p>
       </div>
-
     </div>
-
   );
-
 }
 
 export default Login;

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Upload, X } from "lucide-react";
+
 import API from "../services/api";
+
+import "./EditPost.css";
 
 function EditPost() {
   const { id } = useParams();
@@ -13,6 +17,8 @@ function EditPost() {
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [mediaType, setMediaType] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -20,12 +26,26 @@ function EditPost() {
         const res = await API.get(`/posts/${id}`);
 
         setFormData({
-          title: res.data.title,
-          content: res.data.content,
+          title: res.data.title || "",
+          content: res.data.content || "",
         });
 
         if (res.data.media) {
-          setPreview(`http://localhost:5000/uploads/${res.data.media}`);
+          const backendUrl =
+            import.meta.env.VITE_API_URL?.replace("/api", "") ||
+            "http://localhost:5000";
+
+          const mediaUrl = res.data.media.startsWith("http")
+            ? res.data.media
+            : `${backendUrl}/uploads/${res.data.media}`;
+
+          setPreview(mediaUrl);
+
+          if (res.data.media.match(/\.(mp4|webm|ogg)$/i)) {
+            setMediaType("video");
+          } else {
+            setMediaType("image");
+          }
         }
       } catch (err) {
         console.log(err);
@@ -43,33 +63,46 @@ function EditPost() {
   };
 
   const handleFileChange = (e) => {
-    const selected = e.target.files[0];
+    const selected = e.target.files?.[0];
 
     if (!selected) return;
 
     setFile(selected);
-    setPreview(URL.createObjectURL(selected));
+
+    const url = URL.createObjectURL(selected);
+
+    setPreview(url);
+
+    if (selected.type.startsWith("video")) {
+      setMediaType("video");
+    } else {
+      setMediaType("image");
+    }
   };
 
   const removeMedia = () => {
     setFile(null);
     setPreview(null);
+    setMediaType("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const token = localStorage.getItem("token");
 
       const form = new FormData();
 
       form.append("title", formData.title);
       form.append("content", formData.content);
-      
+
       if (!preview) {
         form.append("removeMedia", "true");
       }
+
       if (file) {
         form.append("media", file);
       }
@@ -87,90 +120,118 @@ function EditPost() {
     } catch (error) {
       console.log(error);
       alert("Update failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <div className="form-container">
-        <h2>Edit Post</h2>
+    <main className="edit-page">
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="edit-header">
+            <span>EDIT STORY</span>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Post Title"
-            required
-          />
+            <h1>Update your post</h1>
 
-          <textarea
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            placeholder="Write something..."
-            required
-          />
+            <p>Make changes to your story and save them.</p>
+          </div>
 
-          <div className="media-upload">
-            <label className="upload-btn">
-              📷 Choose New Image / Video
+          <form onSubmit={handleSubmit} className="edit-form">
+            <div className="edit-input-group">
+              <label>Title</label>
+
               <input
-                type="file"
-                accept="image/*,video/*"
-                hidden
-                onChange={handleFileChange}
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Post title"
+                required
               />
-            </label>
+            </div>
 
-            {preview && (
-              <div className="preview-box">
-                {file ? (
-                  file.type.startsWith("video") ? (
-                    <video src={preview} controls className="preview-media" />
+            <div className="edit-input-group">
+              <label>Content</label>
+
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                placeholder="Write your story..."
+                required
+              />
+            </div>
+
+            <div className="edit-media-section">
+              <label>Media</label>
+
+              {!preview ? (
+                <label className="edit-upload-box">
+                  <Upload size={24} />
+
+                  <span>Upload image or video</span>
+
+                  <small>Click to choose a file</small>
+
+                  <input
+                    type="file"
+                    accept="image/*,video/*"
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                </label>
+              ) : (
+                <div className="edit-preview-container">
+                  {mediaType === "video" ? (
+                    <video
+                      src={preview}
+                      controls
+                      className="edit-preview-media"
+                    />
                   ) : (
                     <img
                       src={preview}
-                      alt="preview"
-                      className="preview-media"
+                      alt="Preview"
+                      className="edit-preview-media"
                     />
-                  )
-                ) : preview.match(/\.(mp4|webm|ogg)$/i) ? (
-                  <video src={preview} controls className="preview-media" />
-                ) : (
-                  <img src={preview} alt="preview" className="preview-media" />
-                )}
+                  )}
 
-                <div className="media-actions">
-                  <label className="change-btn">
-                    Change
-                    <input
-                      type="file"
-                      accept="image/*,video/*"
-                      hidden
-                      onChange={handleFileChange}
-                    />
-                  </label>
+                  <div className="edit-media-actions">
+                    <label className="edit-change-btn">
+                      Change
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </label>
 
-                  <button
-                    type="button"
-                    className="remove-btn"
-                    onClick={removeMedia}
-                  >
-                    Remove
-                  </button>
+                    <button
+                      type="button"
+                      className="edit-remove-btn"
+                      onClick={removeMedia}
+                    >
+                      <X size={16} />
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          <button className="publish-btn" type="submit">
-            Update Post
-          </button>
-        </form>
+            <button
+              className="edit-submit-btn"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Update Post"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
 

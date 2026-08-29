@@ -1,6 +1,9 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { PenLine, Image, Video, Upload, X, ArrowRight } from "lucide-react";
+
+import "./CreatePost.css";
 
 function CreatePost() {
   const navigate = useNavigate();
@@ -12,6 +15,7 @@ function CreatePost() {
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,19 +25,25 @@ function CreatePost() {
   };
 
   const handleFileChange = (e) => {
-    const selected = e.target.files[0];
+    const selected = e.target.files?.[0];
+
+    if (!selected) return;
 
     setFile(selected);
+    setPreview(URL.createObjectURL(selected));
+  };
 
-    if (selected) {
-      setPreview(URL.createObjectURL(selected));
-    }
+  const removeFile = () => {
+    setFile(null);
+    setPreview(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const token = localStorage.getItem("token");
 
       const form = new FormData();
@@ -52,95 +62,137 @@ function CreatePost() {
         },
       });
 
-      alert("Post created successfully!");
+      alert("Post published successfully!");
 
-      setTimeout(() => {
-        navigate("/blogs");
-      }, 500);
+      navigate("/blogs");
     } catch (err) {
-      console.log(err);
+      console.error(err);
       alert("Error creating post");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <div className="form-container">
-        <h2>Create New Post</h2>
+    <main className="create-page">
+      <section className="create-container">
+        <div className="create-header">
+          <span className="create-tag">CREATE STORY</span>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="title"
-            placeholder="Post Title"
-            onChange={handleChange}
-            required
-          />
+          <h1>Share your thoughts.</h1>
 
-          <textarea
-            name="content"
-            placeholder="Write your thoughts..."
-            onChange={handleChange}
-            required
-          />
+          <p>
+            Write something meaningful and share it with the InkWhisper
+            community.
+          </p>
+        </div>
 
-          {/* <input
-            type="file"
-            accept="image/*,video/*"
-            onChange={handleFileChange}
-          /> */}
+        <div className="create-card">
+          <div className="create-card-header">
+            <div className="create-icon">
+              <PenLine size={20} />
+            </div>
 
-          <div className="media-upload">
-            <label className="upload-btn">
-              📷 Choose Image / Video
+            <div>
+              <h2>New Story</h2>
+              <p>Start writing your next idea.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="create-form">
+            <div className="create-input-group">
+              <label>Title</label>
+
               <input
-                type="file"
-                accept="image/*,video/*"
-                onChange={handleFileChange}
-                hidden
+                type="text"
+                name="title"
+                placeholder="Enter your story title"
+                value={formData.title}
+                onChange={handleChange}
+                required
               />
-            </label>
+            </div>
 
-            {preview && (
-              <div className="preview-box">
-                {file?.type.startsWith("video") ? (
-                  <video src={preview} controls className="preview-media" />
-                ) : (
-                  <img src={preview} alt="preview" className="preview-media" />
-                )}
+            <div className="create-input-group">
+              <label>Your Story</label>
 
-                <div className="media-actions">
-                  <label className="change-btn">
-                    Change
+              <textarea
+                name="content"
+                placeholder="Write your thoughts here..."
+                value={formData.content}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="create-media-section">
+              <label className="create-media-label">
+                {!preview ? (
+                  <>
+                    <Upload size={18} />
+                    Add Image or Video
                     <input
                       type="file"
                       accept="image/*,video/*"
                       onChange={handleFileChange}
                       hidden
                     />
-                  </label>
+                  </>
+                ) : (
+                  <>
+                    <Image size={18} />
+                    Change Media
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={handleFileChange}
+                      hidden
+                    />
+                  </>
+                )}
+              </label>
 
-                  <button
-                    type="button"
-                    className="remove-btn"
-                    onClick={() => {
-                      setFile(null);
-                      setPreview(null);
-                    }}
-                  >
-                    Remove
-                  </button>
+              {preview && (
+                <div className="create-preview">
+                  <div className="preview-top">
+                    <span>Preview</span>
+
+                    <button
+                      type="button"
+                      onClick={removeFile}
+                      className="remove-media-btn"
+                    >
+                      <X size={16} />
+                      Remove
+                    </button>
+                  </div>
+
+                  {file?.type.startsWith("video") ? (
+                    <video src={preview} controls className="preview-media" />
+                  ) : (
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="preview-media"
+                    />
+                  )}
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          <button className="publish-btn" type="submit">
-            Publish Post
-          </button>
-        </form>
-      </div>
-    </div>
+            <div className="create-footer">
+              <p>Your story will be visible to the community.</p>
+
+              <button className="publish-btn" type="submit" disabled={loading}>
+                {loading ? "Publishing..." : "Publish Story"}
+
+                {!loading && <ArrowRight size={18} />}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
   );
 }
 

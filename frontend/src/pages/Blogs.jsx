@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, PenLine, BookOpen, Sparkles } from "lucide-react";
+import { Search, PenLine } from "lucide-react";
 
 import API from "../services/api";
 import PostCard from "../components/PostCard";
@@ -18,7 +18,6 @@ function Blogs() {
   const fetchPosts = async () => {
     try {
       const res = await API.get("/posts");
-
       setPosts(res.data);
     } catch (err) {
       console.error("Failed to fetch posts:", err);
@@ -39,35 +38,23 @@ function Blogs() {
 
   return (
     <main className="blogs-page">
-      {/* Background Effects */}
-      <div className="blogs-grid" />
-      <div className="blogs-glow blogs-glow-one" />
-      <div className="blogs-glow blogs-glow-two" />
-
-      {/* Hero */}
       <section className="blogs-hero">
         <div className="blogs-hero-content">
-          <div className="blogs-eyebrow">
-            <Sparkles size={14} />
-            <span>Discover Ideas</span>
-          </div>
+          <span className="blogs-tag">EXPLORE STORIES</span>
 
-          <h1>
-            Stories worth
-            <span> getting lost in.</span>
-          </h1>
+          <h1>Discover ideas and stories.</h1>
 
           <p>
-            Explore thoughts, experiences, and ideas from writers who still
-            believe that words have the power to move people.
+            Read thoughts, experiences, and stories shared by the InkWhisper
+            community.
           </p>
 
           <div className="blogs-search">
-            <Search size={19} />
+            <Search size={18} />
 
             <input
               type="text"
-              placeholder="Search stories, ideas, or writers..."
+              placeholder="Search stories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -75,62 +62,44 @@ function Blogs() {
         </div>
       </section>
 
-      {/* Blog Content */}
       <section className="blogs-content">
-        <div className="blogs-content-header">
+        <div className="blogs-header">
           <div>
-            <span className="blogs-section-label">
-              <BookOpen size={14} />
-              THE COLLECTION
-            </span>
-
-            <h2>Latest stories</h2>
+            <span className="blogs-small-title">LATEST POSTS</span>
+            <h2>Stories</h2>
           </div>
 
-          <div className="blogs-count">
+          <span className="blogs-count">
             {filteredPosts.length}{" "}
             {filteredPosts.length === 1 ? "story" : "stories"}
-          </div>
+          </span>
         </div>
 
-        {/* Loading */}
         {loading && (
           <div className="blogs-loading">
-            <div className="loading-ring" />
-            <p>Gathering stories...</p>
+            <div className="loading-spinner"></div>
+            <p>Loading stories...</p>
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && filteredPosts.length === 0 && (
           <div className="blogs-empty">
-            <div className="empty-icon">
-              {search ? <Search size={28} /> : <PenLine size={28} />}
-            </div>
+            <PenLine size={32} />
 
-            <h3>
-              {search
-                ? "No stories found"
-                : "The page is waiting for its first story"}
-            </h3>
+            <h3>{search ? "No stories found" : "No stories available yet"}</h3>
 
             <p>
               {search
-                ? "Try searching with a different word or phrase."
-                : "Be the first voice to leave something worth reading."}
+                ? "Try searching with another keyword."
+                : "Be the first person to share a story."}
             </p>
           </div>
         )}
 
-        {/* Posts */}
         {!loading && filteredPosts.length > 0 && (
           <div className="blogs-posts">
-            {filteredPosts.map((post, index) => (
-              <div
-                className="blogs-post-wrapper"
-                key={post._id}
-                style={{ animationDelay: `${index * 0.08}s` }}
-              >
+            {filteredPosts.map((post) => (
+              <div className="blog-post-box" key={post._id}>
                 <PostCard post={post} />
               </div>
             ))}
