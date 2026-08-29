@@ -66,8 +66,13 @@ function CreatePost() {
 
       navigate("/blogs");
     } catch (err) {
-      console.error(err);
-      alert("Error creating post");
+      console.error("CREATE POST ERROR:", err);
+
+      console.error("SERVER RESPONSE:", err.response?.data);
+
+      alert(
+        err.response?.data?.message || "Error creating post. Please try again.",
+      );
     } finally {
       setLoading(false);
     }

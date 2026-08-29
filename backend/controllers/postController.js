@@ -3,27 +3,42 @@ const path = require("path");
 const Post = require("../models/Post");
 
 /* CREATE POST */
-
 exports.createPost = async (req, res) => {
   try {
+    console.log("CREATE POST REQUEST RECEIVED");
+
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    console.log("USER:", req.user);
+
     const { title, content } = req.body;
 
-    const media = req.file ? `/uploads/${req.file.filename}` : null;
+    if (!title || !content) {
+      return res.status(400).json({
+        message: "Title and content are required",
+      });
+    }
+
+    const media = req.file ? req.file.filename : null;
 
     const post = new Post({
       title,
       content,
       media,
-      author: req.user, // ← use req.user (since middleware already sets id)
+      author: req.user,
     });
 
     await post.save();
+
+    console.log("POST CREATED:", post);
 
     res.status(201).json(post);
   } catch (error) {
     console.error("CREATE POST ERROR:", error);
 
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message || "Failed to create post",
+    });
   }
 };
 

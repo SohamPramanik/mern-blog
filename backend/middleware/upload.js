@@ -1,9 +1,17 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
+
+const uploadPath = path.join(__dirname, "../uploads");
+
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../uploads"));
+    cb(null, uploadPath);
   },
 
   filename: function (req, file, cb) {
@@ -18,10 +26,17 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype.startsWith("image/") ||
-    file.mimetype.startsWith("video/")
-  ) {
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/webp",
+    "image/gif",
+    "video/mp4",
+    "video/webm",
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error("Only images and videos are allowed"), false);
@@ -31,6 +46,9 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
+  limits: {
+    fileSize: 20 * 1024 * 1024, // 20 MB
+  },
 });
 
 module.exports = upload;
