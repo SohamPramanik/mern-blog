@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only images and videos are allowed"), false);
+    cb(new Error(`Unsupported file type: ${file.mimetype}`), false);
   }
 };
 
@@ -34,24 +34,40 @@ const uploadToCloudinary = (file) => {
   return new Promise((resolve, reject) => {
     const resourceType = file.mimetype.startsWith("video/") ? "video" : "image";
 
-    cloudinary.uploader
-      .upload_stream(
-        {
-          folder: "memoire/posts",
-          resource_type: resourceType,
-        },
-        (error, result) => {
-          if (error) {
-            console.error("CLOUDINARY ERROR:", error);
-            return reject(error);
-          }
+    console.log("=================================");
+    console.log("CLOUDINARY UPLOAD START");
+    console.log("File:", file.originalname);
+    console.log("MIME:", file.mimetype);
+    console.log("Size:", file.size);
+    console.log("Resource:", resourceType);
+    console.log("Cloud name configured:", !!process.env.CLOUDINARY_CLOUD_NAME);
+    console.log("API key configured:", !!process.env.CLOUDINARY_API_KEY);
+    console.log("API secret configured:", !!process.env.CLOUDINARY_API_SECRET);
+    console.log("=================================");
 
-          console.log("CLOUDINARY UPLOAD SUCCESS:", result.secure_url);
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "memoire/posts",
+        resource_type: resourceType,
+      },
+      (error, result) => {
+        if (error) {
+          console.error("=================================");
+          console.error("CLOUDINARY ACTUAL ERROR:");
+          console.error(error);
+          console.error("=================================");
 
-          resolve(result);
-        },
-      )
-      .end(file.buffer);
+          return reject(error);
+        }
+
+        console.log("CLOUDINARY UPLOAD SUCCESS");
+        console.log("URL:", result.secure_url);
+
+        resolve(result);
+      },
+    );
+
+    stream.end(file.buffer);
   });
 };
 
@@ -62,7 +78,10 @@ const upload = {
     return async (req, res, next) => {
       multerMiddleware(req, res, async (err) => {
         if (err) {
-          console.error("MULTER ERROR:", err);
+          console.error("=================================");
+          console.error("MULTER ERROR:");
+          console.error(err);
+          console.error("=================================");
 
           return res.status(400).json({
             message: err.message || "File upload failed.",
@@ -70,16 +89,10 @@ const upload = {
         }
 
         try {
-          // No file attached
           if (!req.file) {
+            console.log("No media file attached.");
             return next();
           }
-
-          console.log("Uploading file to Cloudinary:", {
-            name: req.file.originalname,
-            type: req.file.mimetype,
-            size: req.file.size,
-          });
 
           const result = await uploadToCloudinary(req.file);
 
@@ -91,12 +104,13 @@ const upload = {
 
           next();
         } catch (error) {
-          console.error("CLOUDINARY UPLOAD ERROR:", error);
+          console.error("=================================");
+          console.error("CLOUDINARY UPLOAD ERROR:");
+          console.error(error);
+          console.error("=================================");
 
           return res.status(500).json({
             message: "Media upload failed.",
-            error:
-              process.env.NODE_ENV === "production" ? undefined : error.message,
           });
         }
       });
