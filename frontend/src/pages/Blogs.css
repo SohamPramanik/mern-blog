@@ -1278,3 +1278,120 @@
     justify-content: flex-start;
   }
 }
+
+/* =========================================================
+   TYPOGRAPHY REFINEMENT
+   Slightly larger text for better readability
+   ========================================================= */
+
+.blogs-eyebrow {
+  font-size: 10px;
+}
+
+.blogs-hero-copy > p {
+  font-size: 15px;
+}
+
+.blogs-hero-side > span {
+  font-size: 9px;
+}
+
+.blogs-hero-side strong {
+  font-size: 19px;
+}
+
+.blogs-search input {
+  font-size: 13px;
+}
+
+.clear-search {
+  font-size: 10px;
+}
+
+.feed-eyebrow {
+  font-size: 9px;
+}
+
+.moment-count {
+  font-size: 11px;
+}
+
+.author-details strong {
+  font-size: 12px;
+}
+
+.author-details span {
+  font-size: 9px;
+}
+
+.moment-journey {
+  font-size: 9px;
+}
+
+.moment-body p {
+  font-size: 13px;
+}
+
+.moment-tags span {
+  font-size: 9px;
+}
+
+.social-button {
+  font-size: 10px;
+}
+
+.read-moment {
+  font-size: 10px;
+}
+
+.read-journey {
+  font-size: 10px;
+}
+
+.write-card > span {
+  font-size: 9px;
+}
+
+.write-card p {
+  font-size: 11px;
+}
+
+.write-card-button {
+  font-size: 11px;
+}
+
+.sidebar-note p {
+  font-size: 10px;
+}
+
+.sidebar-note strong {
+  font-size: 13px;
+}
+
+.discover-card > span {
+  font-size: 9px;
+}
+
+.discover-item strong {
+  font-size: 13px;
+}
+
+.discover-item p {
+  font-size: 9px;
+}
+
+.blogs-loading p {
+  font-size: 11px;
+}
+
+.blogs-empty > span {
+  font-size: 9px;
+}
+
+.blogs-empty p {
+  font-size: 11px;
+}
+
+.empty-write-button {
+  font-size: 11px;
+}

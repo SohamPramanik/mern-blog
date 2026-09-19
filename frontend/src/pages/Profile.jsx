@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   BookOpen,
   CalendarDays,
+  Edit3,
   Heart,
   MessageCircle,
   PenLine,
@@ -21,6 +22,8 @@ function Profile() {
   // =========================================================
 
   const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+
+  const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
   const [journeys, setJourneys] = useState([]);
@@ -60,21 +63,16 @@ function Profile() {
       // =====================================================
       // GET USERNAME
       // =====================================================
-      // First priority: logged-in user stored during login.
-      // This works even when the user has 0 moments/journeys.
-      // =====================================================
 
       const currentUser = JSON.parse(localStorage.getItem("user") || "null");
 
       if (currentUser?.username) {
         setUsername(currentUser.username);
       } else if (postsData.length > 0) {
-        // Fallback for older sessions
         setUsername(
           postsData[0]?.author?.username || postsData[0]?.user?.username || "",
         );
       } else if (journeysData.length > 0) {
-        // Fallback for older sessions
         setUsername(journeysData[0]?.owner?.username || "");
       }
     } catch (error) {
@@ -454,37 +452,46 @@ function Profile() {
                             <p>{getPreview(post.content)}</p>
 
                             {/* Moment Media */}
-                            {post.media && (
-                              <div className="profile-moment-media">
-                                {/\.(mp4|webm|ogg|mov)$/i.test(
-                                  typeof post.media === "string"
+
+                            {post.media &&
+                              (typeof post.media === "string"
+                                ? post.media
+                                : post.media?.url) && (
+                                <div className="profile-moment-media">
+                                  {(typeof post.media === "string"
                                     ? post.media
-                                    : post.media?.url || "",
-                                ) ? (
-                                  <video
-                                    src={
-                                      typeof post.media === "string"
-                                        ? post.media.startsWith("http")
-                                          ? post.media
-                                          : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
-                                        : post.media?.url
-                                    }
-                                    controls
-                                  />
-                                ) : (
-                                  <img
-                                    src={
-                                      typeof post.media === "string"
-                                        ? post.media.startsWith("http")
-                                          ? post.media
-                                          : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
-                                        : post.media?.url
-                                    }
-                                    alt={post.title}
-                                  />
-                                )}
-                              </div>
-                            )}
+                                    : post.media?.type === "video"
+                                      ? "video.mp4"
+                                      : post.media?.url || ""
+                                  ).match(/\.(mp4|webm|ogg|mov)$/i) ? (
+                                    <video
+                                      src={
+                                        typeof post.media === "string"
+                                          ? post.media.startsWith("http")
+                                            ? post.media
+                                            : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
+                                          : post.media?.url
+                                      }
+                                      controls
+                                    />
+                                  ) : (
+                                    <img
+                                      src={
+                                        typeof post.media === "string"
+                                          ? post.media.startsWith("http")
+                                            ? post.media
+                                            : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
+                                          : post.media?.url
+                                      }
+                                      alt={post.title}
+                                    />
+                                  )}
+                                </div>
+                              )}
+
+                            {/* =================================================
+                                MOMENT FOOTER
+                                ================================================= */}
 
                             <div className="profile-moment-footer">
                               <div className="profile-moment-stats">
@@ -499,13 +506,24 @@ function Profile() {
                                 </span>
                               </div>
 
-                              <Link
-                                to={`/post/${post._id}`}
-                                className="profile-read-link"
-                              >
-                                Read moment
-                                <ArrowRight size={13} />
-                              </Link>
+                              <div className="profile-moment-actions">
+                                <button
+                                  type="button"
+                                  className="profile-edit-button"
+                                  onClick={() => navigate(`/edit/${post._id}`)}
+                                >
+                                  <Edit3 size={13} />
+                                  Edit
+                                </button>
+
+                                <Link
+                                  to={`/post/${post._id}`}
+                                  className="profile-read-link"
+                                >
+                                  Read moment
+                                  <ArrowRight size={13} />
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         </article>

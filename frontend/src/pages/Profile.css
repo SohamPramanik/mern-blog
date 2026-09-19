@@ -1450,3 +1450,180 @@
     font-size: 21px;
   }
 }
+/* =========================================================
+   TYPOGRAPHY REFINEMENT
+   Slightly larger text for better readability
+   ========================================================= */
+
+.profile-eyebrow {
+  font-size: 10px;
+}
+
+.profile-identity p {
+  font-size: 14px;
+}
+
+.profile-write-button {
+  font-size: 12px;
+}
+
+.profile-stat span {
+  font-size: 10px;
+}
+
+.profile-stat strong {
+  font-size: 25px;
+}
+
+.profile-intro > span {
+  font-size: 10px;
+}
+
+.profile-intro p {
+  font-size: 14px;
+}
+
+.profile-tabs button {
+  font-size: 12px;
+}
+
+.profile-moment-date {
+  font-size: 11px;
+}
+
+.profile-moment-journey {
+  font-size: 11px;
+}
+
+.profile-moment p {
+  font-size: 14px;
+}
+
+.profile-moment-stats span {
+  font-size: 11px;
+}
+
+.profile-read-link {
+  font-size: 12px;
+}
+
+.journey-card-top > span {
+  font-size: 11px;
+}
+
+.profile-journey-card > p {
+  font-size: 12px;
+}
+
+.journey-card-bottom > span {
+  font-size: 11px;
+}
+
+.journey-read-link {
+  font-size: 11px;
+}
+
+.new-journey-card span {
+  font-size: 11px;
+}
+
+.profile-empty > span {
+  font-size: 10px;
+}
+
+.profile-empty p {
+  font-size: 12px;
+}
+
+.profile-empty-button {
+  font-size: 12px;
+}
+
+.profile-story-card > span {
+  font-size: 10px;
+}
+
+.profile-story-card p {
+  font-size: 11px;
+}
+
+.sidebar-label {
+  font-size: 9px;
+}
+
+.sidebar-action {
+  font-size: 12px;
+}
+
+.profile-philosophy p {
+  font-size: 11px;
+}
+
+.profile-philosophy strong {
+  font-size: 13px;
+}
+
+.profile-appreciation span {
+  font-size: 9px;
+}
+
+.profile-loading p {
+  font-size: 12px;
+}
+
+/* =========================================================
+   MOMENT ACTIONS
+   ========================================================= */
+
+.profile-moment-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.profile-edit-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  border: none;
+  background: transparent;
+
+  padding: 0;
+
+  color: var(--text-muted);
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.profile-edit-button:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.profile-edit-button svg {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .profile-moment-actions {
+    gap: 12px;
+  }
+
+  .profile-edit-button {
+    font-size: 11px;
+  }
+}

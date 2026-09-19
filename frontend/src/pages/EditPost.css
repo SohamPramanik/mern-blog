@@ -1,218 +1,1026 @@
+/* =========================================================
+   MEMOIRE — EDIT MOMENT
+   Editorial / Literary Theme
+   ========================================================= */
+
 .edit-page {
-  min-height: calc(100vh - 70px);
-  padding: 60px 20px;
-  background: var(--bg-primary);
+  --edit-bg: #faf9f6;
+  --edit-surface: #ffffff;
+  --edit-surface-soft: #f3f1eb;
+  --edit-text: #1e1e1c;
+  --edit-text-soft: #6e6c66;
+  --edit-border: #e5e2da;
+  --edit-accent: #8b5e3c;
+  --edit-accent-dark: #68452c;
+
+  min-height: 100vh;
+
+  padding: 80px 7% 120px;
+
+  background: var(--edit-bg);
+  color: var(--edit-text);
+
+  font-family: "DM Sans", sans-serif;
 }
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+.edit-page *,
+.edit-page *::before,
+.edit-page *::after {
+  box-sizing: border-box;
+}
+
+.edit-page button,
+.edit-page input,
+.edit-page textarea {
+  font-family: inherit;
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
 
 .edit-container {
   width: 100%;
-  max-width: 800px;
-  margin: auto;
+  max-width: 1050px;
+
+  margin: 0 auto;
 }
+
+/* =========================================================
+   TOP NAV
+   ========================================================= */
+
+.edit-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 45px;
+}
+
+.edit-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: var(--edit-text-soft);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    gap 0.2s ease;
+}
+
+.edit-back-button:hover {
+  color: var(--edit-text);
+  gap: 11px;
+}
+
+.edit-topbar > span {
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: var(--edit-accent);
+}
+
+/* =========================================================
+   EDITOR LAYOUT
+   ========================================================= */
+
+.edit-layout {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 260px;
+
+  gap: 70px;
+
+  align-items: start;
+}
+
+/* =========================================================
+   MAIN EDITOR
+   ========================================================= */
 
 .edit-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 32px;
-  box-shadow: var(--shadow-sm);
+  min-width: 0;
+
+  background: var(--edit-surface);
+
+  border: 1px solid var(--edit-border);
+
+  padding: 55px 60px;
+
+  box-shadow: 0 15px 40px rgba(40, 35, 25, 0.045);
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .edit-header {
-  margin-bottom: 30px;
+  padding-bottom: 35px;
+
+  margin-bottom: 38px;
+
+  border-bottom: 1px solid var(--edit-border);
 }
 
-.edit-header span {
-  font-size: 12px;
+.edit-eyebrow {
+  display: block;
+
+  margin-bottom: 17px;
+
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--accent);
+
+  letter-spacing: 2.5px;
+
+  color: var(--edit-accent);
 }
 
 .edit-header h1 {
-  margin-top: 8px;
-  font-size: 32px;
-  color: var(--text-primary);
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: clamp(38px, 4vw, 55px);
+
+  line-height: 1.05;
+
+  font-weight: 500;
+
+  letter-spacing: -1px;
+
+  color: var(--edit-text);
 }
 
 .edit-header p {
-  margin-top: 8px;
-  color: var(--text-secondary);
+  max-width: 570px;
+
+  margin: 20px 0 0;
+
+  color: var(--edit-text-soft);
+
+  font-size: 14px;
+
+  line-height: 1.8;
 }
 
-/* FORM */
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.edit-inline-error {
+  margin-bottom: 28px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e8cfc4;
+
+  background: #faf3ef;
+
+  color: var(--edit-accent-dark);
+
+  font-size: 11px;
+
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
 
 .edit-form {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+
+  gap: 38px;
 }
+
+/* =========================================================
+   INPUT GROUP
+   ========================================================= */
 
 .edit-input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+
+  gap: 10px;
 }
 
-.edit-input-group label,
-.edit-media-section > label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
+.edit-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
 }
+
+.edit-input-group label {
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: var(--edit-text-soft);
+}
+
+.edit-label-row > span {
+  font-size: 9px;
+
+  color: #aaa69e;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 .edit-input-group input,
 .edit-input-group textarea {
   width: 100%;
-  padding: 13px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface-soft);
-  color: var(--text-primary);
+
+  border: 1px solid var(--edit-border);
+
+  border-radius: 0;
+
+  background: var(--edit-surface-soft);
+
+  color: var(--edit-text);
+
   outline: none;
-  transition: 0.2s ease;
+
+  font-size: 15px;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.edit-input-group input {
+  min-height: 52px;
+
+  padding: 14px 15px;
+}
+
+.edit-input-group textarea {
+  min-height: 360px;
+
+  padding: 17px 15px;
+
+  resize: vertical;
+
+  line-height: 1.9;
+}
+
+.edit-input-group input::placeholder,
+.edit-input-group textarea::placeholder {
+  color: #aaa69e;
 }
 
 .edit-input-group input:focus,
 .edit-input-group textarea:focus {
-  border-color: var(--accent);
+  border-color: var(--edit-accent);
+
+  background: var(--edit-surface);
 }
 
-.edit-input-group textarea {
-  min-height: 180px;
-  resize: vertical;
+/* =========================================================
+   TITLE INPUT
+   ========================================================= */
+
+.edit-input-group:first-of-type input {
+  font-family: "Playfair Display", serif;
+
+  font-size: 21px;
+
+  line-height: 1.4;
 }
 
-/* MEDIA */
+/* =========================================================
+   MEDIA SECTION
+   ========================================================= */
 
 .edit-media-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
+  gap: 13px;
 }
 
-.edit-upload-box {
-  min-height: 150px;
-  border: 2px dashed var(--border-strong);
-  border-radius: 12px;
+.edit-section-heading {
   display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+.edit-section-heading label {
+  display: block;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: var(--edit-text-soft);
+}
+
+.edit-section-heading p {
+  max-width: 450px;
+
+  margin: 7px 0 0;
+
+  color: var(--edit-text-soft);
+
+  font-size: 11px;
+
+  line-height: 1.7;
+}
+
+.edit-section-heading > span {
+  flex-shrink: 0;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: #aaa69e;
+}
+
+/* =========================================================
+   UPLOAD
+   ========================================================= */
+
+.edit-upload-box {
+  min-height: 190px;
+
+  border: 1px dashed #d4cfc5;
+
+  display: flex;
+
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
+
   gap: 8px;
+
   cursor: pointer;
-  color: var(--text-secondary);
-  background: var(--surface-soft);
-  transition: 0.2s ease;
+
+  background: var(--edit-surface-soft);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .edit-upload-box:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: var(--edit-accent);
+
+  background: #f7f2ec;
+}
+
+.edit-upload-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 4px;
+
+  color: var(--edit-accent);
+
+  border: 1px solid #eadfd4;
+
+  background: #f7f2ec;
+}
+
+.edit-upload-box strong {
+  font-family: "Playfair Display", serif;
+
+  font-size: 17px;
+
+  font-weight: 500;
+
+  color: var(--edit-text);
 }
 
 .edit-upload-box span {
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 11px;
+
+  color: var(--edit-text-soft);
 }
 
 .edit-upload-box small {
-  color: var(--text-muted);
+  margin-top: 2px;
+
+  font-size: 9px;
+
+  color: #99958c;
 }
 
-/* PREVIEW */
+/* =========================================================
+   MEDIA PREVIEW
+   ========================================================= */
 
 .edit-preview-container {
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid var(--edit-border);
+
   padding: 12px;
-  background: var(--surface-soft);
+
+  background: var(--edit-surface-soft);
+}
+
+.edit-preview {
+  position: relative;
+
+  overflow: hidden;
+
+  background: #242320;
 }
 
 .edit-preview-media {
   width: 100%;
-  max-height: 400px;
-  object-fit: contain;
-  border-radius: 10px;
+
+  max-height: 450px;
+
   display: block;
-  background: #000;
+
+  object-fit: contain;
+
+  background: #242320;
 }
 
-/* ACTIONS */
+.edit-media-type {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px 9px;
+
+  background: rgba(36, 35, 32, 0.85);
+
+  color: white;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   MEDIA ACTIONS
+   ========================================================= */
 
 .edit-media-actions {
   display: flex;
+
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 12px;
+
+  gap: 18px;
+
+  padding-top: 12px;
 }
 
 .edit-change-btn,
 .edit-remove-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 5px 0;
+
   border: none;
-  padding: 9px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+
+  background: transparent;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
   cursor: pointer;
 }
 
 .edit-change-btn {
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
+  color: var(--edit-accent);
+
+  border-bottom: 1px solid transparent;
+
+  transition: border-color 0.2s ease;
+}
+
+.edit-change-btn:hover {
+  border-color: var(--edit-accent);
 }
 
 .edit-remove-btn {
+  color: #9b4a3d;
+}
+
+.edit-remove-btn:hover {
+  color: #78352c;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.edit-footer {
   display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  padding-top: 35px;
+
+  border-top: 1px solid var(--edit-border);
+}
+
+.edit-footer-note > span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: var(--edit-accent);
+}
+
+.edit-footer-note p {
+  max-width: 300px;
+
+  margin: 0;
+
+  color: var(--edit-text-soft);
+
+  font-size: 10px;
+
+  line-height: 1.7;
+}
+
+.edit-footer-actions {
+  display: flex;
+
   align-items: center;
-  gap: 5px;
-  background: #fee2e2;
-  color: #dc2626;
+
+  gap: 18px;
+
+  flex-shrink: 0;
 }
 
-/* SUBMIT */
-
+.edit-cancel-btn,
 .edit-submit-btn {
-  width: 100%;
-  padding: 13px;
-  border: none;
-  border-radius: 10px;
-  background: var(--accent);
-  color: white;
+  min-height: 42px;
+
+  padding: 11px 18px;
+
+  border-radius: 4px;
+
+  font-size: 11px;
+
   font-weight: 600;
-  font-size: 15px;
-  transition: 0.2s ease;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.edit-submit-btn:hover {
-  background: var(--accent-hover);
+.edit-cancel-btn {
+  border: 1px solid var(--edit-border);
+
+  background: transparent;
+
+  color: var(--edit-text-soft);
+}
+
+.edit-cancel-btn:hover {
+  border-color: #cfcac0;
+
+  color: var(--edit-text);
+
   transform: translateY(-1px);
 }
 
-.edit-submit-btn:disabled {
-  opacity: 0.7;
+.edit-submit-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+
+  background: var(--edit-text);
+
+  color: white;
+}
+
+.edit-submit-btn:hover {
+  background: var(--edit-accent-dark);
+
+  transform: translateY(-2px);
+}
+
+.edit-submit-btn:disabled,
+.edit-cancel-btn:disabled {
+  opacity: 0.55;
+
   cursor: not-allowed;
+
   transform: none;
 }
 
-/* RESPONSIVE */
+/* =========================================================
+   EDITORIAL SIDE NOTE
+   ========================================================= */
 
-@media (max-width: 600px) {
+.edit-editorial-note {
+  padding-top: 8px;
+}
+
+.edit-editorial-line {
+  width: 35px;
+
+  height: 1px;
+
+  margin-bottom: 22px;
+
+  background: var(--edit-accent);
+}
+
+.edit-editorial-note > span {
+  display: block;
+
+  margin-bottom: 15px;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 2.5px;
+
+  color: var(--edit-accent);
+}
+
+.edit-editorial-note h2 {
+  margin: 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 30px;
+
+  line-height: 1.2;
+
+  font-weight: 500;
+}
+
+.edit-editorial-note h2 em {
+  color: var(--edit-accent);
+
+  font-weight: 500;
+}
+
+.edit-editorial-note p {
+  margin: 20px 0 0;
+
+  color: var(--edit-text-soft);
+
+  font-size: 12px;
+
+  line-height: 1.9;
+}
+
+/* =========================================================
+   MINI TIMELINE
+   ========================================================= */
+
+.edit-mini-timeline {
+  position: relative;
+
+  margin-top: 55px;
+
+  padding-left: 25px;
+}
+
+.edit-mini-timeline::before {
+  content: "";
+
+  position: absolute;
+
+  left: 4px;
+  top: 0;
+  bottom: 0;
+
+  width: 1px;
+
+  background: var(--edit-border);
+}
+
+.edit-mini-timeline-item {
+  position: relative;
+
+  margin-bottom: 30px;
+}
+
+.edit-mini-timeline-item::before {
+  content: "";
+
+  position: absolute;
+
+  left: -25px;
+  top: 4px;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--edit-accent);
+
+  box-shadow: 0 0 0 5px var(--edit-bg);
+}
+
+.edit-mini-timeline-item span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  color: #99958c;
+}
+
+.edit-mini-timeline-item strong {
+  font-family: "Playfair Display", serif;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  color: var(--edit-text);
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.edit-loading {
+  min-height: 500px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.edit-loading span {
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: var(--edit-accent);
+}
+
+.edit-loading p {
+  margin-top: 10px;
+
+  color: var(--edit-text-soft);
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   ERROR CARD
+   ========================================================= */
+
+.edit-error-card {
+  max-width: 650px;
+
+  margin: 80px auto;
+
+  padding: 60px 50px;
+
+  background: var(--edit-surface);
+
+  border: 1px solid var(--edit-border);
+
+  text-align: center;
+}
+
+.edit-error-card > span {
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 2.5px;
+
+  color: var(--edit-accent);
+}
+
+.edit-error-card h1 {
+  margin: 15px 0 0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 35px;
+
+  font-weight: 500;
+}
+
+.edit-error-card p {
+  max-width: 450px;
+
+  margin: 15px auto 25px;
+
+  color: var(--edit-text-soft);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+.edit-error-card button {
+  padding: 12px 20px;
+
+  border: none;
+
+  border-radius: 4px;
+
+  background: var(--edit-text);
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
   .edit-page {
-    padding: 30px 15px;
+    padding: 65px 6% 90px;
+  }
+
+  .edit-layout {
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+  }
+
+  .edit-editorial-note {
+    max-width: 600px;
+  }
+
+  .edit-mini-timeline {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 650px) {
+  .edit-page {
+    padding: 55px 6% 80px;
+  }
+
+  .edit-topbar {
+    margin-bottom: 35px;
+  }
+
+  .edit-topbar > span {
+    display: none;
   }
 
   .edit-card {
-    padding: 22px;
+    padding: 35px 25px;
   }
 
   .edit-header h1 {
-    font-size: 26px;
+    font-size: 39px;
   }
 
-  .edit-preview-media {
-    max-height: 280px;
+  .edit-header p {
+    font-size: 13px;
+  }
+
+  .edit-input-group textarea {
+    min-height: 300px;
+  }
+
+  .edit-footer {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .edit-footer-actions {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 450px) {
+  .edit-page {
+    padding: 40px 5% 65px;
+  }
+
+  .edit-card {
+    padding: 28px 20px;
+  }
+
+  .edit-header {
+    margin-bottom: 30px;
+  }
+
+  .edit-header h1 {
+    font-size: 34px;
+  }
+
+  .edit-form {
+    gap: 30px;
+  }
+
+  .edit-section-heading {
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+  .edit-media-actions {
+    justify-content: space-between;
+  }
+
+  .edit-footer-actions {
+    width: 100%;
+  }
+
+  .edit-cancel-btn,
+  .edit-submit-btn {
+    flex: 1;
+  }
+
+  .edit-editorial-note h2 {
+    font-size: 26px;
   }
 }

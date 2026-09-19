@@ -287,17 +287,45 @@ const updatePost = async (req, res) => {
       });
     }
 
+    // =========================================================
+    // TITLE
+    // =========================================================
+
     if (req.body.title !== undefined) {
+      if (!req.body.title.trim()) {
+        return res.status(400).json({
+          message: "Moment title is required.",
+        });
+      }
+
       post.title = req.body.title.trim();
     }
 
+    // =========================================================
+    // CONTENT
+    // =========================================================
+
     if (req.body.content !== undefined) {
+      if (!req.body.content.trim()) {
+        return res.status(400).json({
+          message: "Moment content is required.",
+        });
+      }
+
       post.content = req.body.content.trim();
     }
+
+    // =========================================================
+    // PRIVACY
+    // =========================================================
 
     if (req.body.privacy !== undefined) {
       post.privacy = req.body.privacy;
     }
+
+    // =========================================================
+    // JOURNEY
+    // =========================================================
 
     if (req.body.journeyId !== undefined) {
       if (
@@ -324,20 +352,23 @@ const updatePost = async (req, res) => {
       }
     }
 
-    // =====================================================
-    // REPLACE MEDIA
-    // =====================================================
+    // =========================================================
+    // REMOVE EXISTING MEDIA
+    // =========================================================
 
-    if (req.file) {
+    if (req.body.removeMedia === "true" && !req.file) {
       const oldMedia = post.media;
 
-      const mediaData = getMediaData(req.file);
-
-      post.media = mediaData;
+      post.media = {
+        url: "",
+        type: "",
+        originalName: "",
+        publicId: "",
+        resourceType: "",
+      };
 
       await post.save();
 
-      // Delete old Cloudinary file after new media is saved
       await deleteCloudinaryMedia(oldMedia);
 
       const updatedPost = await Post.findById(post._id)
@@ -349,6 +380,37 @@ const updatePost = async (req, res) => {
         post: updatedPost,
       });
     }
+
+    // =========================================================
+    // REPLACE MEDIA
+    // =========================================================
+
+    if (req.file) {
+      const oldMedia = post.media;
+
+      const mediaData = getMediaData(req.file);
+
+      post.media = mediaData;
+
+      await post.save();
+
+      // Delete old Cloudinary asset AFTER new media
+      // has been successfully saved.
+      await deleteCloudinaryMedia(oldMedia);
+
+      const updatedPost = await Post.findById(post._id)
+        .populate("author", "username avatar")
+        .populate("journey", "title");
+
+      return res.json({
+        message: "Moment updated successfully.",
+        post: updatedPost,
+      });
+    }
+
+    // =========================================================
+    // SAVE TEXT-ONLY CHANGES
+    // =========================================================
 
     await post.save();
 
@@ -364,7 +426,7 @@ const updatePost = async (req, res) => {
     console.error("UPDATE MOMENT ERROR:", error);
 
     res.status(500).json({
-      message: "Failed to update moment.",
+      message: error.message || "Failed to update moment.",
     });
   }
 };

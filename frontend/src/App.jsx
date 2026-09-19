@@ -18,10 +18,21 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+
         <Route path="/blogs" element={<Blogs />} />
+
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/create"
@@ -32,7 +43,15 @@ function App() {
           }
         />
 
-        <Route path="/edit/:id" element={<EditPost />} />
+        <Route
+          path="/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPost />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/post/:id" element={<PostDetails />} />
       </Routes>
     </BrowserRouter>
