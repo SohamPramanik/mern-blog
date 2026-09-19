@@ -24,6 +24,8 @@ function App() {
         =================================================== */}
 
         <Route path="/" element={<Home />} />
+        
+        <Route path="/home" element={<Home />} />
 
         <Route path="/blogs" element={<Blogs />} />
 
