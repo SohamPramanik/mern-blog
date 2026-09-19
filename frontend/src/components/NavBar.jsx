@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { PenLine, BookOpen, User, LogOut } from "lucide-react";
+
 import "./NavBar.css";
 
 function NavBar() {
@@ -9,9 +10,17 @@ function NavBar() {
 
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  // =========================================================
+  // KEEP LOGIN STATE IN SYNC
+  // =========================================================
+
   useEffect(() => {
     setToken(localStorage.getItem("token"));
   }, [location.pathname]);
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
 
   const logout = () => {
     const confirmed = window.confirm("Are you sure you want to log out?");
@@ -21,36 +30,73 @@ function NavBar() {
     }
 
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+
+    setToken(null);
+
     navigate("/");
   };
+
+  // =========================================================
+  // ACTIVE LINK
+  // =========================================================
 
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
   };
 
+  // =========================================================
+  // RENDER
+  // =========================================================
+
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* ================= BRAND ================= */}
+        {/* =================================================
+            BRAND
+        ================================================= */}
 
         <Link to="/" className="navbar-brand">
           <span className="brand-name">MEMOIRE</span>
+
           <span className="brand-tagline">
             Your story, one moment at a time.
           </span>
         </Link>
 
-        {/* ================= NAVIGATION ================= */}
+        {/* =================================================
+            NAVIGATION
+        ================================================= */}
 
         <nav className="nav-links">
-          <Link to="/" className={isActive("/")}>
-            Home
-          </Link>
+          {/* =================================================
+              HOME
+
+              IMPORTANT:
+              Home is ONLY shown when logged OUT.
+          ================================================= */}
+
+          {!token && (
+            <Link to="/" className={isActive("/")}>
+              Home
+            </Link>
+          )}
+
+          {/* =================================================
+              EXPLORE
+
+              Available to everyone.
+          ================================================= */}
 
           <Link to="/blogs" className={isActive("/blogs")}>
             <BookOpen size={15} />
             Explore
           </Link>
+
+          {/* =================================================
+              LOGGED-IN NAVIGATION
+          ================================================= */}
 
           {token && (
             <>
@@ -67,7 +113,9 @@ function NavBar() {
           )}
         </nav>
 
-        {/* ================= ACTIONS ================= */}
+        {/* =================================================
+            ACTIONS
+        ================================================= */}
 
         <div className="nav-actions">
           {token ? (
