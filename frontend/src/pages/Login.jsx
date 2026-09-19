@@ -1,237 +1,228 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowRight,
+  PenLine,
   BookOpen,
-  Sparkles,
+  User,
+  LogOut,
 } from "lucide-react";
-import API from "../services/api";
-import "./Login.css";
 
-function Login() {
+import "./NavBar.css";
+
+function NavBar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  // =========================================================
+  // AUTHENTICATION STATE
+  // =========================================================
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token"))
+  );
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  // =========================================================
+  // CHECK LOGIN STATE
+  // =========================================================
 
-    setErrorMsg("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setErrorMsg("");
-
-    try {
-      const res = await API.post("/auth/login", formData);
-
-      // Save JWT token
-      localStorage.setItem("token", res.data.token);
-
-      // Save logged-in user's information
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      // Go to Explore/Blogs page
-      navigate("/blogs");
-    } catch (error) {
-      setErrorMsg(
-        error?.response?.data?.message ||
-          "Login failed. Please check your email and password.",
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsLoggedIn(
+        Boolean(localStorage.getItem("token"))
       );
-    } finally {
-      setLoading(false);
+    };
+
+    // Check whenever route changes
+    checkAuth();
+
+    // Listen for login/logout events
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", checkAuth);
+    };
+  }, [location.pathname]);
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  const logout = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to log out?"
+    );
+
+    if (!confirmed) {
+      return;
     }
+
+    // Remove authentication information
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+
+    // Update Navbar immediately
+    setIsLoggedIn(false);
+
+    // Notify other components
+    window.dispatchEvent(
+      new Event("auth-change")
+    );
+
+    // Go to home
+    navigate("/");
   };
+
+  // =========================================================
+  // ACTIVE LINK
+  // =========================================================
+
+  const isActive = (path) => {
+    return location.pathname === path
+      ? "active"
+      : "";
+  };
+
+  // =========================================================
+  // RENDER
+  // =========================================================
 
   return (
-    <main className="login-page">
-      {/* ================= LEFT SIDE ================= */}
+    <header className="navbar">
 
-      <section className="login-story">
-        <Link to="/" className="login-brand">
-          MEMOIRE
-        </Link>
+      <div className="navbar-container">
 
-        <div className="login-story-content">
-          <span className="login-eyebrow">
-            <Sparkles size={14} />
-            WELCOME BACK
+        {/* ===================================================
+            BRAND
+        =================================================== */}
+
+        <Link
+          to="/"
+          className="navbar-brand"
+        >
+          <span className="brand-name">
+            MEMOIRE
           </span>
 
-          <h1>
-            Your story
-            <br />
-            is waiting
-            <br />
-            <em>for you.</em>
-          </h1>
+          <span className="brand-tagline">
+            Your story, one moment at a time.
+          </span>
+        </Link>
 
-          <p>
-            Continue writing the moments that matter. Pick up where you left off
-            and keep building your journey.
-          </p>
 
-          <div className="login-decoration">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+        {/* ===================================================
+            NAVIGATION
+        =================================================== */}
 
-          <div className="login-quote">
-            <BookOpen size={18} />
+        <nav className="nav-links">
 
-            <div>
-              <p>
-                "Some moments are worth remembering. Some are worth writing
-                down."
-              </p>
+          {/* =================================================
+              HOME
 
-              <span>— MEMOIRE</span>
-            </div>
-          </div>
-        </div>
+              Only visible when user is NOT logged in
+          ================================================= */}
 
-        <div className="login-story-footer">
-          Your words. Your journey. Your memories.
-        </div>
-      </section>
+          {!isLoggedIn && (
+            <Link
+              to="/"
+              className={isActive("/")}
+            >
+              Home
+            </Link>
+          )}
 
-      {/* ================= RIGHT SIDE ================= */}
 
-      <section className="login-form-section">
-        <div className="login-card">
-          {/* Mobile brand */}
+          {/* =================================================
+              EXPLORE
 
-          <div className="mobile-login-brand">MEMOIRE</div>
+              Visible to everyone
+          ================================================= */}
 
-          {/* ================= HEADER ================= */}
+          <Link
+            to="/blogs"
+            className={isActive("/blogs")}
+          >
+            <BookOpen size={15} />
+            Explore
+          </Link>
 
-          <div className="login-header">
-            <span className="login-form-label">WELCOME BACK</span>
 
-            <h2>
-              Continue your <em>story.</em>
-            </h2>
+          {/* =================================================
+              LOGGED-IN NAVIGATION
+          ================================================= */}
 
-            <p>Sign in to return to your moments and journeys.</p>
-          </div>
+          {isLoggedIn && (
+            <>
+              <Link
+                to="/create"
+                className={isActive("/create")}
+              >
+                <PenLine size={15} />
+                Write a Moment
+              </Link>
 
-          {/* ================= FORM ================= */}
+              <Link
+                to="/profile"
+                className={isActive("/profile")}
+              >
+                <User size={15} />
+                Profile
+              </Link>
+            </>
+          )}
 
-          <form onSubmit={handleSubmit}>
-            {/* Email */}
+        </nav>
 
-            <div className="login-form-group">
-              <label htmlFor="login-email">Email address</label>
 
-              <div className="login-input-box">
-                <Mail size={18} />
+        {/* ===================================================
+            RIGHT SIDE ACTIONS
+        =================================================== */}
 
-                <input
-                  id="login-email"
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  autoComplete="username"
-                  required
-                />
-              </div>
-            </div>
+        <div className="nav-actions">
 
-            {/* Password */}
+          {isLoggedIn ? (
 
-            <div className="login-form-group">
-              <div className="password-label-row">
-                <label htmlFor="login-password">Password</label>
-              </div>
-
-              <div className="login-input-box">
-                <Lock size={18} />
-
-                <input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                  required
-                />
-
-                <button
-                  type="button"
-                  className="password-btn"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Error */}
-
-            {errorMsg && <div className="login-error">{errorMsg}</div>}
-
-            {/* Submit */}
+            /* ================= LOGGED IN ================= */
 
             <button
-              type="submit"
-              className="login-submit-btn"
-              disabled={loading}
+              className="logout-btn"
+              onClick={logout}
+              type="button"
             >
-              {loading ? (
-                <>
-                  <span className="login-spinner"></span>
-                  Signing you in...
-                </>
-              ) : (
-                <>
-                  Continue to Memoire
-                  <ArrowRight size={18} />
-                </>
-              )}
+              <LogOut size={15} />
+              Logout
             </button>
-          </form>
 
-          {/* ================= REGISTER ================= */}
+          ) : (
 
-          <div className="login-register">
-            <span>Don't have an account?</span>
+            /* ================= LOGGED OUT ================= */
 
-            <Link to="/register">
-              Create your Memoire
-              <ArrowRight size={14} />
-            </Link>
-          </div>
+            <>
+              <Link
+                to="/login"
+                className="login-btn"
+              >
+                Sign in
+              </Link>
 
-          <p className="login-note">
-            Your moments and journeys are waiting for you.
-          </p>
+              <Link
+                to="/register"
+                className="join-btn"
+              >
+                Start Writing
+                <span>→</span>
+              </Link>
+            </>
+
+          )}
+
         </div>
-      </section>
-    </main>
+
+      </div>
+
+    </header>
   );
 }
 
-export default Login;
+export default NavBar;
