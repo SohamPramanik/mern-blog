@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { PenLine, BookOpen, User, LogOut } from "lucide-react";
 
 import "./NavBar.css";
@@ -8,38 +8,15 @@ function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Force Navbar to re-render when auth changes
-  const [, setAuthVersion] = useState(0);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   // =========================================================
-  // AUTH STATE
-  // =========================================================
-
-  const isLoggedIn = Boolean(localStorage.getItem("token"));
-
-  // =========================================================
-  // REFRESH NAVBAR WHEN ROUTE CHANGES
+  // KEEP LOGIN STATE IN SYNC
   // =========================================================
 
   useEffect(() => {
-    setAuthVersion((value) => value + 1);
+    setToken(localStorage.getItem("token"));
   }, [location.pathname]);
-
-  // =========================================================
-  // REFRESH NAVBAR WHEN AUTH CHANGES
-  // =========================================================
-
-  useEffect(() => {
-    const handleAuthChange = () => {
-      setAuthVersion((value) => value + 1);
-    };
-
-    window.addEventListener("auth-change", handleAuthChange);
-
-    return () => {
-      window.removeEventListener("auth-change", handleAuthChange);
-    };
-  }, []);
 
   // =========================================================
   // LOGOUT
@@ -56,8 +33,7 @@ function NavBar() {
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
 
-    // Tell Navbar that authentication changed
-    window.dispatchEvent(new Event("auth-change"));
+    setToken(null);
 
     navigate("/");
   };
@@ -97,10 +73,11 @@ function NavBar() {
           {/* =================================================
               HOME
 
-              ONLY LOGGED-OUT USERS SEE THIS
+              IMPORTANT:
+              Home is ONLY shown when logged OUT.
           ================================================= */}
 
-          {!isLoggedIn && (
+          {!token && (
             <Link to="/" className={isActive("/")}>
               Home
             </Link>
@@ -109,7 +86,7 @@ function NavBar() {
           {/* =================================================
               EXPLORE
 
-              EVERYONE CAN SEE THIS
+              Available to everyone.
           ================================================= */}
 
           <Link to="/blogs" className={isActive("/blogs")}>
@@ -118,10 +95,10 @@ function NavBar() {
           </Link>
 
           {/* =================================================
-              LOGGED-IN OPTIONS
+              LOGGED-IN NAVIGATION
           ================================================= */}
 
-          {isLoggedIn && (
+          {token && (
             <>
               <Link to="/create" className={isActive("/create")}>
                 <PenLine size={15} />
@@ -137,11 +114,11 @@ function NavBar() {
         </nav>
 
         {/* =================================================
-            RIGHT SIDE
+            ACTIONS
         ================================================= */}
 
         <div className="nav-actions">
-          {isLoggedIn ? (
+          {token ? (
             <button className="logout-btn" onClick={logout} type="button">
               <LogOut size={15} />
               Logout
