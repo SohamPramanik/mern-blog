@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 
 import API from "../services/api";
 import "./Login.css";
@@ -49,68 +57,176 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to continue to InkWhisper.</p>
+    <main className="login-page">
+      {/* ================= LEFT SIDE ================= */}
+
+      <section className="login-story">
+        <Link to="/" className="login-brand">
+          MEMOIRE
+        </Link>
+
+        <div className="login-story-content">
+          <span className="login-eyebrow">
+            <Sparkles size={14} />
+            WELCOME BACK
+          </span>
+
+          <h1>
+            Your story
+            <br />
+            is waiting
+            <br />
+            <em>for you.</em>
+          </h1>
+
+          <p>
+            Continue writing the moments that matter. Pick up where you left off
+            and keep building your journey.
+          </p>
+
+          <div className="login-decoration">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div className="login-quote">
+            <BookOpen size={18} />
+
+            <div>
+              <p>
+                "Some moments are worth remembering. Some are worth writing
+                down."
+              </p>
+
+              <span>— MEMOIRE</span>
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
+        <div className="login-story-footer">
+          Your words. Your journey. Your memories.
+        </div>
+      </section>
 
-            <div className="input-box">
-              <Mail size={18} />
+      {/* ================= RIGHT SIDE ================= */}
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+      <section className="login-form-section">
+        <div className="login-card">
+          {/* Mobile brand */}
+
+          <div className="mobile-login-brand">MEMOIRE</div>
+
+          {/* ================= HEADER ================= */}
+
+          <div className="login-header">
+            <span className="login-form-label">WELCOME BACK</span>
+
+            <h2>
+              Continue your <em>story.</em>
+            </h2>
+
+            <p>Sign in to return to your moments and journeys.</p>
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
+          {/* ================= FORM ================= */}
 
-            <div className="input-box">
-              <Lock size={18} />
+          <form onSubmit={handleSubmit}>
+            {/* Email */}
 
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+            <div className="login-form-group">
+              <label htmlFor="login-email">Email address</label>
 
-              <button
-                type="button"
-                className="password-btn"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+              <div className="login-input-box">
+                <Mail size={18} />
+
+                <input
+                  id="login-email"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  autoComplete="username"
+                  required
+                />
+              </div>
             </div>
+
+            {/* Password */}
+
+            <div className="login-form-group">
+              <div className="password-label-row">
+                <label htmlFor="login-password">Password</label>
+              </div>
+
+              <div className="login-input-box">
+                <Lock size={18} />
+
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="password-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Error */}
+
+            {errorMsg && <div className="login-error">{errorMsg}</div>}
+
+            {/* Submit */}
+
+            <button
+              type="submit"
+              className="login-submit-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="login-spinner"></span>
+                  Signing you in...
+                </>
+              ) : (
+                <>
+                  Continue to Memoire
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* ================= REGISTER ================= */}
+
+          <div className="login-register">
+            <span>Don't have an account?</span>
+
+            <Link to="/register">
+              Create your Memoire
+              <ArrowRight size={14} />
+            </Link>
           </div>
 
-          {errorMsg && <div className="login-error">{errorMsg}</div>}
-
-          <button type="submit" className="login-submit-btn" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
-
-        <p className="login-register">
-          Don't have an account? <Link to="/register">Create one</Link>
-        </p>
-      </div>
-    </div>
+          <p className="login-note">
+            Your moments and journeys are waiting for you.
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }
 

@@ -6,33 +6,71 @@ const multer = require("multer");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
+
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
+const journeyRoutes = require("./routes/journeyRoutes");
 
 const app = express();
 
+// =========================================================
+// CORS
+// =========================================================
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "http://localhost:5173",
     credentials: true,
   }),
 );
 
+// =========================================================
+// MIDDLEWARE
+// =========================================================
+
 app.use(express.json());
 
-// Serve uploaded files
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
+
+// =========================================================
+// STATIC MEDIA
+// =========================================================
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// =========================================================
+// DATABASE
+// =========================================================
 
 connectDB();
 
+// =========================================================
+// ROUTES
+// =========================================================
+
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/journeys", journeyRoutes);
+
+// =========================================================
+// HEALTH CHECK
+// =========================================================
 
 app.get("/", (req, res) => {
-  res.send("Blog API Running");
+  res.json({
+    message: "Memoire API Running",
+    status: "success",
+  });
 });
 
-// Error handler
+// =========================================================
+// ERROR HANDLER
+// =========================================================
+
 app.use((error, req, res, next) => {
   console.error("SERVER ERROR:", error);
 
@@ -43,12 +81,16 @@ app.use((error, req, res, next) => {
   }
 
   res.status(500).json({
-    message: error.message || "Something went wrong",
+    message: error.message || "Something went wrong.",
   });
 });
+
+// =========================================================
+// SERVER
+// =========================================================
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Memoire server running on port ${PORT}`);
 });

@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { PenLine, BookOpen, User, LogOut } from "lucide-react";
 import "./NavBar.css";
 
 function NavBar() {
@@ -25,38 +26,48 @@ function NavBar() {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* BRAND */}
+        {/* ================= BRAND ================= */}
+
         <Link to="/" className="navbar-brand">
-          InkWhisper
+          <span className="brand-name">MEMOIRE</span>
+          <span className="brand-tagline">
+            Your story, one moment at a time.
+          </span>
         </Link>
 
-        {/* NAVIGATION */}
+        {/* ================= NAVIGATION ================= */}
+
         <nav className="nav-links">
           <Link to="/" className={isActive("/")}>
             Home
           </Link>
 
           <Link to="/blogs" className={isActive("/blogs")}>
+            <BookOpen size={15} />
             Explore
           </Link>
 
           {token && (
             <>
               <Link to="/create" className={isActive("/create")}>
-                Write
+                <PenLine size={15} />
+                Write a Moment
               </Link>
 
               <Link to="/profile" className={isActive("/profile")}>
+                <User size={15} />
                 Profile
               </Link>
             </>
           )}
         </nav>
 
-        {/* ACTIONS */}
+        {/* ================= ACTIONS ================= */}
+
         <div className="nav-actions">
           {token ? (
             <button className="logout-btn" onClick={logout} type="button">
+              <LogOut size={15} />
               Logout
             </button>
           ) : (
@@ -66,7 +77,8 @@ function NavBar() {
               </Link>
 
               <Link to="/register" className="join-btn">
-                Start Writing →
+                Start Writing
+                <span>→</span>
               </Link>
             </>
           )}

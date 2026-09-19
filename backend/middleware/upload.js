@@ -4,9 +4,10 @@ const fs = require("fs");
 
 const uploadPath = path.join(__dirname, "../uploads");
 
-// Create uploads directory if it doesn't exist
 if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath, { recursive: true });
+  fs.mkdirSync(uploadPath, {
+    recursive: true,
+  });
 }
 
 const storage = multer.diskStorage({
@@ -39,15 +40,19 @@ const fileFilter = (req, file, cb) => {
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only images and videos are allowed"), false);
+    cb(
+      new Error("Only JPG, PNG, WEBP, GIF, MP4 and WEBM files are allowed."),
+      false,
+    );
   }
 };
 
 const upload = multer({
   storage,
   fileFilter,
+
   limits: {
-    fileSize: 20 * 1024 * 1024, // 20 MB
+    fileSize: 20 * 1024 * 1024,
   },
 });
 
