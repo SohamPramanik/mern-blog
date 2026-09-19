@@ -558,6 +558,39 @@
 }
 
 /* =========================================================
+   MOMENT MEDIA
+   ========================================================= */
+
+.profile-moment-media {
+  width: 100%;
+
+  margin: 20px 0 20px;
+
+  overflow: hidden;
+
+  border: 1px solid #e0dcd4;
+
+  border-radius: 4px;
+
+  background: #e9e6df;
+}
+
+.profile-moment-media img,
+.profile-moment-media video {
+  display: block;
+
+  width: 100%;
+
+  height: auto;
+
+  max-height: 650px;
+
+  object-fit: contain;
+
+  margin: 0 auto;
+}
+
+/* =========================================================
    MOMENT FOOTER
    ========================================================= */
 

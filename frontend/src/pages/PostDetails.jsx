@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { User, Calendar, Heart } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, Calendar, Heart, User } from "lucide-react";
 
 import API from "../services/api";
 
@@ -11,31 +11,120 @@ function PostDetails() {
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // =========================================================
+  // FETCH SINGLE MOMENT
+  // =========================================================
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
+        setLoading(true);
+        setErrorMsg("");
+
         const res = await API.get(`/posts/${id}`);
+
         setPost(res.data);
       } catch (error) {
-        console.log(error);
+        console.error("Failed to fetch moment:", error);
+
+        setErrorMsg(
+          error?.response?.data?.message || "Unable to load this moment.",
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPost();
+    if (id) {
+      fetchPost();
+    }
   }, [id]);
 
-  const getMediaUrl = (media) => {
-    if (!media) return null;
+  // =========================================================
+  // MEDIA URL
+  // =========================================================
 
-    if (media.startsWith("http://") || media.startsWith("https://")) {
-      return media;
+  const getMediaUrl = (media) => {
+    if (!media) {
+      return null;
     }
 
-    return `http://localhost:5000/uploads/${media}`;
+    // If backend returns:
+    // media: { url: "...", type: "image" }
+    if (typeof media === "object") {
+      const mediaUrl = media.url;
+
+      if (!mediaUrl) {
+        return null;
+      }
+
+      if (mediaUrl.startsWith("http://") || mediaUrl.startsWith("https://")) {
+        return mediaUrl;
+      }
+
+      return `http://localhost:5000${mediaUrl.startsWith("/") ? "" : "/"}${mediaUrl}`;
+    }
+
+    // If backend returns a string
+    if (typeof media === "string") {
+      // Already a complete URL
+      if (media.startsWith("http://") || media.startsWith("https://")) {
+        return media;
+      }
+
+      // If backend already gives /uploads/filename
+      if (media.startsWith("/uploads/")) {
+        return `http://localhost:5000${media}`;
+      }
+
+      // If backend gives only filename
+      return `http://localhost:5000/uploads/${media}`;
+    }
+
+    return null;
   };
+
+  // =========================================================
+  // MEDIA TYPE
+  // =========================================================
+
+  const getMediaType = (media) => {
+    if (!media) {
+      return "";
+    }
+
+    if (typeof media === "object") {
+      return media.type || "";
+    }
+
+    return "";
+  };
+
+  // =========================================================
+  // CHECK VIDEO
+  // =========================================================
+
+  const isVideoFile = (media) => {
+    if (!media) {
+      return false;
+    }
+
+    const mediaType = getMediaType(media);
+
+    if (mediaType === "video") {
+      return true;
+    }
+
+    const mediaValue = typeof media === "string" ? media : media.url || "";
+
+    return /\.(mp4|webm|ogg|mov)$/i.test(mediaValue);
+  };
+
+  // =========================================================
+  // LOADING
+  // =========================================================
 
   if (loading) {
     return (
@@ -45,44 +134,122 @@ function PostDetails() {
     );
   }
 
+  // =========================================================
+  // NOT FOUND / ERROR
+  // =========================================================
+
   if (!post) {
     return (
       <main className="post-details-page">
         <div className="post-not-found">
-          <h2>Post not found</h2>
-          <p>This story may have been deleted.</p>
+          <h2>{errorMsg || "Post not found"}</h2>
+
+          <p>This story may have been deleted or is temporarily unavailable.</p>
+
+          <Link to="/blogs" className="back-to-feed">
+            <ArrowLeft size={15} />
+            Back to moments
+          </Link>
         </div>
       </main>
     );
   }
 
-  const mediaUrl = getMediaUrl(post.media);
+  // =========================================================
+  // MEDIA
+  // =========================================================
 
-  const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(post.media || "");
+  const mediaUrl = getMediaUrl(post.media);
+  const isVideo = isVideoFile(post.media);
+
+  // =========================================================
+  // LIKES
+  // =========================================================
+
+  const likesCount = post.likesCount ?? post.likes?.length ?? 0;
+
+  // =========================================================
+  // DATE
+  // =========================================================
+
+  const formattedDate = post.createdAt
+    ? new Date(post.createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
+  // =========================================================
+  // RENDER
+  // =========================================================
 
   return (
     <main className="post-details-page">
+      {/* =====================================================
+          BACK TO FEED
+          ===================================================== */}
+
+      <div className="post-details-topbar">
+        <Link to="/blogs" className="post-details-back">
+          <ArrowLeft size={15} />
+          Back to moments
+        </Link>
+      </div>
+
+      {/* =====================================================
+          ARTICLE
+          ===================================================== */}
+
       <article className="post-details-container">
-        {/* MEDIA */}
+        {/* =================================================
+            MEDIA
+            ================================================= */}
+
         {mediaUrl && (
           <div className="post-details-media-container">
             {isVideo ? (
-              <video src={mediaUrl} controls className="post-details-media" />
+              <video
+                src={mediaUrl}
+                controls
+                preload="metadata"
+                className="post-details-media"
+              />
             ) : (
               <img
                 src={mediaUrl}
-                alt={post.title}
+                alt={post.title || "Moment"}
                 className="post-details-media"
               />
             )}
           </div>
         )}
 
-        <div className="post-details-content">
-          {/* TITLE */}
-          <h1>{post.title}</h1>
+        {/* =================================================
+            CONTENT
+            ================================================= */}
 
-          {/* AUTHOR INFO */}
+        <div className="post-details-content">
+          {/* =================================================
+              JOURNEY
+              ================================================= */}
+
+          {post.journey && (
+            <div className="post-details-journey">
+              {post.journey.title || post.journey.name}
+            </div>
+          )}
+
+          {/* =================================================
+              TITLE
+              ================================================= */}
+
+          <h1>{post.title || "Untitled Moment"}</h1>
+
+          {/* =================================================
+              AUTHOR INFO
+              ================================================= */}
+
           <div className="post-details-meta">
             <div className="post-details-author">
               <div className="details-avatar">
@@ -95,23 +262,22 @@ function PostDetails() {
             <div className="post-details-date">
               <Calendar size={16} />
 
-              <span>
-                {post.createdAt
-                  ? new Date(post.createdAt).toLocaleDateString()
-                  : ""}
-              </span>
+              <span>{formattedDate}</span>
             </div>
 
             <div className="post-details-likes">
               <Heart size={16} />
 
-              <span>{post.likes?.length || 0}</span>
+              <span>{likesCount}</span>
             </div>
           </div>
 
           <div className="post-details-divider" />
 
-          {/* CONTENT */}
+          {/* =================================================
+              CONTENT
+              ================================================= */}
+
           <div className="post-details-text">{post.content}</div>
         </div>
       </article>

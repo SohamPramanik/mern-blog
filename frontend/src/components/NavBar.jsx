@@ -14,8 +14,13 @@ function NavBar() {
   }, [location.pathname]);
 
   const logout = () => {
+    const confirmed = window.confirm("Are you sure you want to log out?");
+
+    if (!confirmed) {
+      return;
+    }
+
     localStorage.removeItem("token");
-    setToken(null);
     navigate("/");
   };
 

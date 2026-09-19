@@ -16,10 +16,16 @@ import API from "../services/api";
 import "./Profile.css";
 
 function Profile() {
+  // =========================================================
+  // LOGGED-IN USER
+  // =========================================================
+
+  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+
   const [posts, setPosts] = useState([]);
   const [journeys, setJourneys] = useState([]);
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(storedUser?.username || "");
 
   const [loading, setLoading] = useState(true);
 
@@ -51,18 +57,24 @@ function Profile() {
       setPosts(postsData);
       setJourneys(journeysData);
 
-      // -------------------------------------------------------
+      // =====================================================
       // GET USERNAME
-      // -------------------------------------------------------
+      // =====================================================
+      // First priority: logged-in user stored during login.
+      // This works even when the user has 0 moments/journeys.
+      // =====================================================
 
-      if (postsData.length > 0) {
+      const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+
+      if (currentUser?.username) {
+        setUsername(currentUser.username);
+      } else if (postsData.length > 0) {
+        // Fallback for older sessions
         setUsername(
           postsData[0]?.author?.username || postsData[0]?.user?.username || "",
         );
-      }
-
-      // If backend returns owner information
-      if (!username && journeysData.length > 0) {
+      } else if (journeysData.length > 0) {
+        // Fallback for older sessions
         setUsername(journeysData[0]?.owner?.username || "");
       }
     } catch (error) {
@@ -169,7 +181,6 @@ function Profile() {
     }
 
     const first = journeyPosts[0]?.createdAt;
-
     const last = journeyPosts[journeyPosts.length - 1]?.createdAt;
 
     const firstDate = formatDate(first);
@@ -442,6 +453,39 @@ function Profile() {
 
                             <p>{getPreview(post.content)}</p>
 
+                            {/* Moment Media */}
+                            {post.media && (
+                              <div className="profile-moment-media">
+                                {/\.(mp4|webm|ogg|mov)$/i.test(
+                                  typeof post.media === "string"
+                                    ? post.media
+                                    : post.media?.url || "",
+                                ) ? (
+                                  <video
+                                    src={
+                                      typeof post.media === "string"
+                                        ? post.media.startsWith("http")
+                                          ? post.media
+                                          : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
+                                        : post.media?.url
+                                    }
+                                    controls
+                                  />
+                                ) : (
+                                  <img
+                                    src={
+                                      typeof post.media === "string"
+                                        ? post.media.startsWith("http")
+                                          ? post.media
+                                          : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
+                                        : post.media?.url
+                                    }
+                                    alt={post.title}
+                                  />
+                                )}
+                              </div>
+                            )}
+
                             <div className="profile-moment-footer">
                               <div className="profile-moment-stats">
                                 <span>
@@ -636,9 +680,9 @@ function Profile() {
               <Sparkles size={15} />
 
               <p>
-                <strong>Your words stay yours.</strong>
-                Memoire may understand themes, emotions and connections inside
-                your writing — but your story remains in your voice.
+                <strong>Your words stay yours.</strong> Memoire may understand
+                themes, emotions and connections inside your writing — but your
+                story remains in your voice.
               </p>
             </div>
 

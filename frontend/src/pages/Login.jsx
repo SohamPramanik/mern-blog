@@ -9,7 +9,6 @@ import {
   BookOpen,
   Sparkles,
 } from "lucide-react";
-
 import API from "../services/api";
 import "./Login.css";
 
@@ -43,8 +42,13 @@ function Login() {
     try {
       const res = await API.post("/auth/login", formData);
 
+      // Save JWT token
       localStorage.setItem("token", res.data.token);
 
+      // Save logged-in user's information
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // Go to Explore/Blogs page
       navigate("/blogs");
     } catch (error) {
       setErrorMsg(
