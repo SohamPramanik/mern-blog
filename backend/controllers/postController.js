@@ -1,26 +1,46 @@
 const Post = require("../models/Post");
 const Journey = require("../models/Journey");
+const cloudinary = require("../config/cloudinary");
 
 // =========================================================
 // MEDIA HELPER
 // =========================================================
 
-const getMediaData = (req, file) => {
+const getMediaData = (file) => {
   if (!file) {
     return null;
   }
 
-  let type = "image";
-
-  if (file.mimetype.startsWith("video/")) {
-    type = "video";
-  }
+  const type = file.mimetype.startsWith("video/") ? "video" : "image";
 
   return {
-    url: `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+    url: file.cloudinaryUrl || file.path || file.filename || "",
     type,
-    originalName: file.originalname,
+    originalName: file.originalname || "",
+    publicId: file.cloudinaryPublicId || "",
+    resourceType: file.cloudinaryResourceType || type,
   };
+};
+
+// =========================================================
+// DELETE CLOUDINARY MEDIA
+// =========================================================
+
+const deleteCloudinaryMedia = async (media) => {
+  if (!media?.publicId) {
+    return;
+  }
+
+  try {
+    await cloudinary.uploader.destroy(media.publicId, {
+      resource_type: media.resourceType || "image",
+      invalidate: true,
+    });
+
+    console.log("Cloudinary media deleted:", media.publicId);
+  } catch (error) {
+    console.error("CLOUDINARY DELETE ERROR:", error?.message || error);
+  }
 };
 
 // =========================================================
@@ -78,7 +98,7 @@ const createPost = async (req, res) => {
     // MEDIA
     // =====================================================
 
-    const mediaData = getMediaData(req, req.file);
+    const mediaData = getMediaData(req.file);
 
     // =====================================================
     // CREATE MOMENT
@@ -97,6 +117,8 @@ const createPost = async (req, res) => {
         url: "",
         type: "",
         originalName: "",
+        publicId: "",
+        resourceType: "",
       },
 
       privacy: privacy || "public",
@@ -116,7 +138,6 @@ const createPost = async (req, res) => {
 
     res.status(201).json({
       message: "Moment created successfully.",
-
       post: populatedPost,
     });
   } catch (error) {
@@ -191,11 +212,6 @@ const getSinglePost = async (req, res) => {
         });
       }
     }
-
-    /*
-      Followers-only logic can be expanded
-      when the follow system is implemented.
-    */
 
     if (post.privacy === "followers") {
       if (String(post.author._id) !== String(req.user)) {
@@ -304,15 +320,34 @@ const updatePost = async (req, res) => {
         }
 
         post.journey = journey._id;
-
         post.isStandalone = false;
       }
     }
 
+    // =====================================================
+    // REPLACE MEDIA
+    // =====================================================
+
     if (req.file) {
-      const mediaData = getMediaData(req, req.file);
+      const oldMedia = post.media;
+
+      const mediaData = getMediaData(req.file);
 
       post.media = mediaData;
+
+      await post.save();
+
+      // Delete old Cloudinary file after new media is saved
+      await deleteCloudinaryMedia(oldMedia);
+
+      const updatedPost = await Post.findById(post._id)
+        .populate("author", "username avatar")
+        .populate("journey", "title");
+
+      return res.json({
+        message: "Moment updated successfully.",
+        post: updatedPost,
+      });
     }
 
     await post.save();
@@ -323,7 +358,6 @@ const updatePost = async (req, res) => {
 
     res.json({
       message: "Moment updated successfully.",
-
       post: updatedPost,
     });
   } catch (error) {
@@ -352,7 +386,12 @@ const deletePost = async (req, res) => {
       });
     }
 
+    const mediaToDelete = post.media;
+
     await post.deleteOne();
+
+    // Delete associated Cloudinary media
+    await deleteCloudinaryMedia(mediaToDelete);
 
     res.json({
       message: "Moment deleted successfully.",
@@ -430,9 +469,7 @@ const addComment = async (req, res) => {
 
     post.comments.push({
       user: req.user,
-
       text: text.trim(),
-
       parentComment: parentComment || null,
     });
 
@@ -447,7 +484,6 @@ const addComment = async (req, res) => {
 
     res.status(201).json({
       message: "Comment added successfully.",
-
       comment: newComment,
     });
   } catch (error) {
@@ -528,6 +564,10 @@ const deleteComment = async (req, res) => {
     });
   }
 };
+
+// =========================================================
+// EXPORTS
+// =========================================================
 
 module.exports = {
   createPost,

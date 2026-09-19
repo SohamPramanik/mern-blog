@@ -67,6 +67,17 @@ const postSchema = new mongoose.Schema(
         type: String,
         default: "",
       },
+
+      publicId: {
+        type: String,
+        default: "",
+      },
+
+      resourceType: {
+        type: String,
+        enum: ["image", "video", ""],
+        default: "",
+      },
     },
 
     privacy: {
