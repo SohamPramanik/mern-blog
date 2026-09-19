@@ -1,0 +1,482 @@
+/* =========================================================
+   JOURNEY DETAILS
+   ========================================================= */
+
+.journey-details-page {
+  min-height: calc(100vh - 80px);
+  background: #f8f6f1;
+  padding: 70px 24px 100px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.journey-header {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.journey-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #766f65;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 42px;
+}
+
+.journey-back-link:hover {
+  color: #292822;
+}
+
+.journey-header-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 18px;
+
+  border: 1px solid #dcd5ca;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #8b6746;
+  background: #fffdf9;
+}
+
+.journey-eyebrow {
+  display: block;
+
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 600;
+
+  color: #a27a54;
+
+  margin-bottom: 14px;
+}
+
+.journey-header h1 {
+  margin: 0;
+
+  color: #292822;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(42px, 6vw, 68px);
+
+  font-weight: 500;
+
+  line-height: 1;
+}
+
+.journey-header > p {
+  max-width: 650px;
+
+  margin: 22px auto 0;
+
+  color: #766f65;
+
+  font-size: 16px;
+
+  line-height: 1.8;
+}
+
+.journey-header-meta {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 22px;
+
+  flex-wrap: wrap;
+
+  margin-top: 25px;
+}
+
+.journey-header-meta span {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #8a8177;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   TIMELINE SECTION
+   ========================================================= */
+
+.journey-timeline-section {
+  max-width: 900px;
+
+  margin: 80px auto 0;
+}
+
+.journey-timeline {
+  position: relative;
+}
+
+/* =========================================================
+   TIMELINE ITEM
+   ========================================================= */
+
+.journey-timeline-item {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: 70px 1fr;
+
+  gap: 25px;
+}
+
+/* =========================================================
+   TIMELINE MARKER
+   ========================================================= */
+
+.journey-timeline-marker {
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.journey-timeline-dot {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #fffdf9;
+
+  border: 1px solid #cdbda9;
+
+  color: #8b6746;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 15px;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+.journey-timeline-line {
+  position: absolute;
+
+  top: 42px;
+
+  bottom: 0;
+
+  width: 1px;
+
+  background: #d9d0c4;
+}
+
+/* =========================================================
+   DAY CARD
+   ========================================================= */
+
+.journey-day-card {
+  background: #fffdf9;
+
+  border: 1px solid #e4ded5;
+
+  padding: 30px 32px;
+
+  margin-bottom: 38px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.journey-day-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 35px rgba(50, 43, 33, 0.07);
+}
+
+/* =========================================================
+   DAY TOP
+   ========================================================= */
+
+.journey-day-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 17px;
+}
+
+.journey-day-label {
+  font-size: 10px;
+
+  letter-spacing: 2.5px;
+
+  color: #a27a54;
+
+  font-weight: 700;
+}
+
+.journey-day-date {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #938b81;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.journey-day-card h2 {
+  margin: 0 0 12px;
+
+  color: #292822;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 30px;
+
+  font-weight: 500;
+}
+
+/* =========================================================
+   PREVIEW
+   ========================================================= */
+
+.journey-day-card > p {
+  margin: 0;
+
+  color: #766f65;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.journey-day-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 25px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #eee9e1;
+}
+
+.journey-day-footer > span {
+  color: #aaa198;
+
+  font-size: 11px;
+}
+
+.journey-day-read {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #493c30;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.journey-day-read:hover {
+  color: #9a7049;
+}
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.journey-empty,
+.journey-error {
+  max-width: 600px;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  padding: 70px 30px;
+
+  border: 1px solid #e3ddd3;
+
+  background: #fffdf9;
+}
+
+.journey-empty svg,
+.journey-error svg {
+  color: #9a7049;
+
+  margin-bottom: 18px;
+}
+
+.journey-empty span,
+.journey-error span {
+  display: block;
+
+  font-size: 10px;
+
+  letter-spacing: 2.5px;
+
+  color: #a27a54;
+
+  font-weight: 600;
+}
+
+.journey-empty h2,
+.journey-error h2 {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-weight: 500;
+
+  color: #292822;
+}
+
+.journey-empty p {
+  color: #766f65;
+
+  line-height: 1.7;
+}
+
+.journey-empty a,
+.journey-error a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #493c30;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.journey-loading {
+  min-height: 60vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #766f65;
+}
+
+.journey-loader {
+  width: 30px;
+  height: 30px;
+
+  border: 2px solid #ddd5ca;
+
+  border-top-color: #8b6746;
+
+  border-radius: 50%;
+
+  animation: journey-spin 0.8s linear infinite;
+
+  margin-bottom: 15px;
+}
+
+@keyframes journey-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .journey-details-page {
+    padding: 45px 16px 70px;
+  }
+
+  .journey-timeline-item {
+    grid-template-columns: 45px 1fr;
+
+    gap: 14px;
+  }
+
+  .journey-timeline-dot {
+    width: 36px;
+    height: 36px;
+
+    font-size: 13px;
+  }
+
+  .journey-day-card {
+    padding: 22px;
+  }
+
+  .journey-day-top {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .journey-day-card h2 {
+    font-size: 25px;
+  }
+
+  .journey-day-footer {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+}

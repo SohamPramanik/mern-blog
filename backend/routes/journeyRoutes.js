@@ -12,19 +12,34 @@ const {
   deleteJourney,
 } = require("../controllers/journeyController");
 
-// Create a new journey
+// =========================================================
+// CREATE JOURNEY
+// =========================================================
+
 router.post("/", authMiddleware, createJourney);
 
-// Get my journeys
+// =========================================================
+// GET MY JOURNEYS
+// =========================================================
+
 router.get("/", authMiddleware, getMyJourneys);
 
-// Get a single journey with its moments
+// =========================================================
+// GET SINGLE JOURNEY
+// =========================================================
+
 router.get("/:id", authMiddleware, getSingleJourney);
 
-// Update journey
+// =========================================================
+// UPDATE JOURNEY
+// =========================================================
+
 router.put("/:id", authMiddleware, updateJourney);
 
-// Delete journey
+// =========================================================
+// DELETE JOURNEY
+// =========================================================
+
 router.delete("/:id", authMiddleware, deleteJourney);
 
 module.exports = router;

@@ -6,10 +6,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreatePost from "./pages/CreatePost";
 import PostDetails from "./pages/PostDetails";
-import NavBar from "./components/NavBar";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import EditPost from "./pages/EditPost";
+import JourneyDetails from "./pages/JourneyDetails";
+
+import NavBar from "./components/NavBar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -17,6 +19,10 @@ function App() {
       <NavBar />
 
       <Routes>
+        {/* ===================================================
+            PUBLIC
+        =================================================== */}
+
         <Route path="/" element={<Home />} />
 
         <Route path="/blogs" element={<Blogs />} />
@@ -24,6 +30,12 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        <Route path="/post/:id" element={<PostDetails />} />
+
+        {/* ===================================================
+            PROTECTED
+        =================================================== */}
 
         <Route
           path="/profile"
@@ -52,7 +64,18 @@ function App() {
           }
         />
 
-        <Route path="/post/:id" element={<PostDetails />} />
+        {/* ===================================================
+            JOURNEY DETAILS
+        =================================================== */}
+
+        <Route
+          path="/journeys/:id"
+          element={
+            <ProtectedRoute>
+              <JourneyDetails />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

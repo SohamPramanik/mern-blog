@@ -25,6 +25,10 @@ function Profile() {
 
   const navigate = useNavigate();
 
+  // =========================================================
+  // STATE
+  // =========================================================
+
   const [posts, setPosts] = useState([]);
   const [journeys, setJourneys] = useState([]);
 
@@ -61,7 +65,7 @@ function Profile() {
       setJourneys(journeysData);
 
       // =====================================================
-      // GET USERNAME
+      // USERNAME
       // =====================================================
 
       const currentUser = JSON.parse(localStorage.getItem("user") || "null");
@@ -132,6 +136,30 @@ function Profile() {
   };
 
   // =========================================================
+  // GET JOURNEY ID FROM POST
+  // =========================================================
+
+  const getPostJourneyId = (post) => {
+    return post?.journey?._id || post?.journey?.id || post?.journey || null;
+  };
+
+  // =========================================================
+  // STANDALONE MOMENTS
+  //
+  // A standalone moment = moment with NO journey
+  // =========================================================
+
+  const standalonePosts = useMemo(() => {
+    return [...posts]
+      .filter((post) => {
+        const journeyId = getPostJourneyId(post);
+
+        return !journeyId;
+      })
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [posts]);
+
+  // =========================================================
   // JOURNEY MOMENT COUNT
   // =========================================================
 
@@ -151,8 +179,7 @@ function Profile() {
     const journeyId = journey._id || journey.id;
 
     return posts.filter((post) => {
-      const postJourneyId =
-        post.journey?._id || post.journey?.id || post.journey;
+      const postJourneyId = getPostJourneyId(post);
 
       return String(postJourneyId) === String(journeyId);
     }).length;
@@ -167,8 +194,7 @@ function Profile() {
 
     const journeyPosts = posts
       .filter((post) => {
-        const postJourneyId =
-          post.journey?._id || post.journey?.id || post.journey;
+        const postJourneyId = getPostJourneyId(post);
 
         return String(postJourneyId) === String(journeyId);
       })
@@ -195,7 +221,7 @@ function Profile() {
   // STATS
   // =========================================================
 
-  const totalMoments = posts.length;
+  const totalMoments = standalonePosts.length;
 
   const totalJourneys = journeys.length;
 
@@ -218,16 +244,6 @@ function Profile() {
     );
 
     return sortedPosts[0]?.createdAt;
-  }, [posts]);
-
-  // =========================================================
-  // SORT POSTS
-  // =========================================================
-
-  const sortedPosts = useMemo(() => {
-    return [...posts].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-    );
   }, [posts]);
 
   // =========================================================
@@ -254,7 +270,7 @@ function Profile() {
     <main className="profile-page">
       {/* =====================================================
           PROFILE HERO
-          ===================================================== */}
+      ===================================================== */}
 
       <section className="profile-hero">
         <div className="profile-hero-inner">
@@ -279,25 +295,22 @@ function Profile() {
 
       {/* =====================================================
           STATS
-          ===================================================== */}
+      ===================================================== */}
 
       <section className="profile-stats-section">
         <div className="profile-stats">
           <div className="profile-stat">
             <span>JOURNEYS</span>
-
             <strong>{totalJourneys}</strong>
           </div>
 
           <div className="profile-stat">
             <span>MOMENTS</span>
-
             <strong>{totalMoments}</strong>
           </div>
 
           <div className="profile-stat">
             <span>APPRECIATION</span>
-
             <strong>{totalLikes}</strong>
           </div>
 
@@ -313,18 +326,18 @@ function Profile() {
 
       {/* =====================================================
           MAIN CONTENT
-          ===================================================== */}
+      ===================================================== */}
 
       <section className="profile-content">
         <div className="profile-layout">
           {/* =================================================
               LEFT
-              ================================================= */}
+          ================================================= */}
 
           <div className="profile-main">
             {/* =================================================
                 INTRO
-                ================================================= */}
+            ================================================= */}
 
             <div className="profile-intro">
               <span>
@@ -346,7 +359,7 @@ function Profile() {
 
             {/* =================================================
                 TABS
-                ================================================= */}
+            ================================================= */}
 
             <div className="profile-tabs">
               <button
@@ -370,11 +383,11 @@ function Profile() {
 
             {/* =================================================
                 MOMENTS TAB
-                ================================================= */}
+            ================================================= */}
 
             {activeTab === "moments" && (
               <section className="profile-moments">
-                {sortedPosts.length === 0 ? (
+                {standalonePosts.length === 0 ? (
                   <div className="profile-empty">
                     <div className="profile-empty-icon">
                       <PenLine size={22} />
@@ -395,14 +408,8 @@ function Profile() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="profile-timeline">
-                    {sortedPosts.map((post, index) => {
-                      const journeyId =
-                        post.journey?._id || post.journey?.id || post.journey;
-
-                      const journeyTitle =
-                        post.journey?.title || post.journey?.name || "";
-
+                  <div className="profile-moments-list">
+                    {standalonePosts.map((post) => {
                       const likes = post.likesCount ?? post.likes?.length ?? 0;
 
                       const comments =
@@ -410,120 +417,93 @@ function Profile() {
 
                       return (
                         <article
-                          className="profile-timeline-item"
+                          className="profile-standalone-moment"
                           key={post._id}
                         >
-                          {/* Timeline */}
+                          {/* DATE */}
 
-                          <div className="timeline-marker">
-                            <div className="timeline-dot">
-                              <span></span>
-                            </div>
+                          <div className="profile-standalone-date">
+                            <CalendarDays size={12} />
 
-                            {index !== sortedPosts.length - 1 && (
-                              <div className="timeline-line"></div>
-                            )}
+                            {formatFullDate(post.createdAt)}
                           </div>
 
-                          {/* Moment */}
+                          {/* CONTENT */}
 
-                          <div className="profile-moment">
-                            <div className="profile-moment-top">
-                              <span className="profile-moment-date">
-                                <CalendarDays size={11} />
+                          <h3>{post.title}</h3>
 
-                                {formatFullDate(post.createdAt)}
+                          <p>{getPreview(post.content)}</p>
+
+                          {/* MEDIA */}
+
+                          {post.media &&
+                            (typeof post.media === "string"
+                              ? post.media
+                              : post.media?.url) && (
+                              <div className="profile-moment-media">
+                                {typeof post.media === "string" &&
+                                /\.(mp4|webm|ogg|mov)$/i.test(post.media) ? (
+                                  <video
+                                    src={
+                                      post.media.startsWith("http")
+                                        ? post.media
+                                        : `${import.meta.env.VITE_API_URL.replace(
+                                            "/api",
+                                            "",
+                                          )}/uploads/${post.media}`
+                                    }
+                                    controls
+                                  />
+                                ) : (
+                                  <img
+                                    src={
+                                      typeof post.media === "string"
+                                        ? post.media.startsWith("http")
+                                          ? post.media
+                                          : `${import.meta.env.VITE_API_URL.replace(
+                                              "/api",
+                                              "",
+                                            )}/uploads/${post.media}`
+                                        : post.media?.url
+                                    }
+                                    alt={post.title || "Moment"}
+                                  />
+                                )}
+                              </div>
+                            )}
+
+                          {/* FOOTER */}
+
+                          <div className="profile-moment-footer">
+                            <div className="profile-moment-stats">
+                              <span>
+                                <Heart size={13} />
+                                {likes}
                               </span>
 
-                              {journeyTitle && (
-                                <Link
-                                  to={`/journeys/${journeyId}`}
-                                  className="profile-moment-journey"
-                                >
-                                  <BookOpen size={11} />
-
-                                  {journeyTitle}
-                                </Link>
-                              )}
+                              <span>
+                                <MessageCircle size={13} />
+                                {comments}
+                              </span>
                             </div>
 
-                            <h3>{post.title}</h3>
+                            <div className="profile-moment-actions">
+                              <button
+                                type="button"
+                                className="profile-edit-button"
+                                onClick={() => navigate(`/edit/${post._id}`)}
+                              >
+                                <Edit3 size={13} />
+                                Edit
+                              </button>
 
-                            <p>{getPreview(post.content)}</p>
-
-                            {/* Moment Media */}
-
-                            {post.media &&
-                              (typeof post.media === "string"
-                                ? post.media
-                                : post.media?.url) && (
-                                <div className="profile-moment-media">
-                                  {(typeof post.media === "string"
-                                    ? post.media
-                                    : post.media?.type === "video"
-                                      ? "video.mp4"
-                                      : post.media?.url || ""
-                                  ).match(/\.(mp4|webm|ogg|mov)$/i) ? (
-                                    <video
-                                      src={
-                                        typeof post.media === "string"
-                                          ? post.media.startsWith("http")
-                                            ? post.media
-                                            : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
-                                          : post.media?.url
-                                      }
-                                      controls
-                                    />
-                                  ) : (
-                                    <img
-                                      src={
-                                        typeof post.media === "string"
-                                          ? post.media.startsWith("http")
-                                            ? post.media
-                                            : `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/${post.media}`
-                                          : post.media?.url
-                                      }
-                                      alt={post.title}
-                                    />
-                                  )}
-                                </div>
-                              )}
-
-                            {/* =================================================
-                                MOMENT FOOTER
-                                ================================================= */}
-
-                            <div className="profile-moment-footer">
-                              <div className="profile-moment-stats">
-                                <span>
-                                  <Heart size={13} />
-                                  {likes}
-                                </span>
-
-                                <span>
-                                  <MessageCircle size={13} />
-                                  {comments}
-                                </span>
-                              </div>
-
-                              <div className="profile-moment-actions">
-                                <button
-                                  type="button"
-                                  className="profile-edit-button"
-                                  onClick={() => navigate(`/edit/${post._id}`)}
-                                >
-                                  <Edit3 size={13} />
-                                  Edit
-                                </button>
-
-                                <Link
-                                  to={`/post/${post._id}`}
-                                  className="profile-read-link"
-                                >
-                                  Read moment
-                                  <ArrowRight size={13} />
-                                </Link>
-                              </div>
+                              <Link
+                                to={`/post/${post._id}`}
+                                className="profile-read-link"
+                              >
+                                Read moment
+                                <ArrowRight size={13} />
+                              </Link>
                             </div>
                           </div>
                         </article>
@@ -536,7 +516,7 @@ function Profile() {
 
             {/* =================================================
                 JOURNEYS TAB
-                ================================================= */}
+            ================================================= */}
 
             {activeTab === "journeys" && (
               <section className="profile-journeys">
@@ -591,10 +571,12 @@ function Profile() {
                               "Untitled Journey"}
                           </h3>
 
-                          {journey.description && <p>{journey.description}</p>}
-
-                          {!journey.description && dateRange && (
+                          {journey.description ? (
+                            <p>{journey.description}</p>
+                          ) : dateRange ? (
                             <p>A collection of moments from {dateRange}.</p>
+                          ) : (
+                            <p>A new chapter waiting to be written.</p>
                           )}
 
                           <div className="journey-card-bottom">
@@ -604,7 +586,7 @@ function Profile() {
                               to={`/journeys/${journeyId}`}
                               className="journey-read-link"
                             >
-                              Read journey
+                              Read More
                               <ArrowRight size={13} />
                             </Link>
                           </div>
@@ -612,7 +594,7 @@ function Profile() {
                       );
                     })}
 
-                    {/* Create journey */}
+                    {/* CREATE JOURNEY */}
 
                     <Link to="/create" className="new-journey-card">
                       <div className="new-journey-icon">
@@ -633,12 +615,10 @@ function Profile() {
 
           {/* =================================================
               SIDEBAR
-              ================================================= */}
+          ================================================= */}
 
           <aside className="profile-sidebar">
-            {/* =================================================
-                STORY CARD
-                ================================================= */}
+            {/* STORY CARD */}
 
             <div className="profile-story-card">
               <span>YOUR MEMOIRE</span>
@@ -658,9 +638,7 @@ function Profile() {
               <p>It's all the moments you choose to keep.</p>
             </div>
 
-            {/* =================================================
-                QUICK ACTIONS
-                ================================================= */}
+            {/* QUICK ACTIONS */}
 
             <div className="profile-sidebar-section">
               <span className="sidebar-label">QUICK ACTIONS</span>
@@ -690,9 +668,7 @@ function Profile() {
               </button>
             </div>
 
-            {/* =================================================
-                PHILOSOPHY
-                ================================================= */}
+            {/* PHILOSOPHY */}
 
             <div className="profile-philosophy">
               <Sparkles size={15} />
@@ -704,9 +680,7 @@ function Profile() {
               </p>
             </div>
 
-            {/* =================================================
-                TOTAL LIKES
-                ================================================= */}
+            {/* APPRECIATION */}
 
             <div className="profile-appreciation">
               <Heart size={15} />

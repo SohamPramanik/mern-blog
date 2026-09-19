@@ -1627,3 +1627,257 @@
     font-size: 11px;
   }
 }
+
+/* =========================================================
+   MEMOIRE PROFILE - NEW MOMENTS / JOURNEYS STRUCTURE
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   IMPORTANT:
+   Moments are NOT a timeline anymore.
+   The timeline exists ONLY inside JourneyDetails.
+   --------------------------------------------------------- */
+
+.profile-timeline,
+.profile-timeline-item,
+.timeline-marker,
+.timeline-dot,
+.timeline-line {
+  all: unset;
+}
+
+/* ---------------------------------------------------------
+   STANDALONE MOMENTS
+   --------------------------------------------------------- */
+
+.profile-moments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.profile-standalone-moment {
+  position: relative;
+  padding: 34px 0;
+  border-bottom: 1px solid #e3ddd3;
+}
+
+.profile-standalone-moment:first-child {
+  padding-top: 25px;
+}
+
+.profile-standalone-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #968e84;
+  font-size: 11px;
+  margin-bottom: 16px;
+}
+
+.profile-standalone-moment h3 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #292822;
+}
+
+.profile-standalone-moment > p {
+  max-width: 720px;
+  margin: 0;
+  color: #766f65;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.profile-standalone-moment .profile-moment-media {
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid #e3ddd3;
+  background: #f1eee8;
+}
+
+.profile-standalone-moment .profile-moment-media img,
+.profile-standalone-moment .profile-moment-media video {
+  width: 100%;
+  max-height: 500px;
+  display: block;
+  object-fit: cover;
+}
+
+.profile-standalone-moment .profile-moment-footer {
+  margin-top: 25px;
+  padding-top: 18px;
+  border-top: 1px solid #eee9e2;
+}
+
+/* ---------------------------------------------------------
+   JOURNEY CARDS
+   --------------------------------------------------------- */
+
+.journeys-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.profile-journey-card {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  padding: 27px;
+  border: 1px solid #dfd8ce;
+  background: #fffdf9;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.profile-journey-card:hover {
+  transform: translateY(-3px);
+  border-color: #cdbda9;
+  box-shadow: 0 15px 40px rgba(60, 50, 40, 0.07);
+}
+
+.journey-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.journey-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3eee7;
+  color: #8b6746;
+}
+
+.journey-card-top > span {
+  color: #938a80;
+  font-size: 11px;
+}
+
+.profile-journey-card h3 {
+  margin: 0 0 12px;
+  color: #292822;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  font-weight: 500;
+}
+
+.profile-journey-card > p {
+  margin: 0;
+  color: #766f65;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.journey-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 25px;
+}
+
+.journey-card-bottom > span {
+  color: #aaa198;
+  font-size: 10px;
+}
+
+.journey-read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #463b31;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.journey-read-link:hover {
+  color: #9a7049;
+}
+
+/* ---------------------------------------------------------
+   NEW JOURNEY
+   --------------------------------------------------------- */
+
+.new-journey-card {
+  min-height: 260px;
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border: 1px dashed #cfc5b8;
+  background: transparent;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.new-journey-card:hover {
+  background: #faf7f1;
+}
+
+.new-journey-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3eee7;
+  color: #8b6746;
+  margin-bottom: 18px;
+}
+
+.new-journey-card strong {
+  color: #40382f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.new-journey-card span {
+  max-width: 230px;
+  margin-top: 8px;
+  color: #8d857b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 850px) {
+  .journeys-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-standalone-moment {
+    padding: 27px 0;
+  }
+
+  .profile-standalone-moment h3 {
+    font-size: 25px;
+  }
+
+  .journey-card-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Journey = require("../models/Journey");
 const Post = require("../models/Post");
 
@@ -75,6 +77,20 @@ const getMyJourneys = async (req, res) => {
 
 const getSingleJourney = async (req, res) => {
   try {
+    // -------------------------------------------------------
+    // VALIDATE MONGODB ID
+    // -------------------------------------------------------
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid journey ID.",
+      });
+    }
+
+    // -------------------------------------------------------
+    // FIND JOURNEY
+    // -------------------------------------------------------
+
     const journey = await Journey.findById(req.params.id)
       .populate("owner", "username avatar bio")
       .lean();
@@ -85,20 +101,43 @@ const getSingleJourney = async (req, res) => {
       });
     }
 
+    // -------------------------------------------------------
+    // GET MOMENTS
+    // -------------------------------------------------------
+
     const moments = await Post.find({
       journey: journey._id,
     })
       .populate("author", "username avatar")
-      .sort({ createdAt: 1 })
+      .sort({
+        createdAt: 1,
+      })
       .lean();
 
+    // -------------------------------------------------------
+    // FILTER MOMENTS
+    // -------------------------------------------------------
+
     const visibleMoments = moments.filter((moment) => {
+      // Public moments
       if (moment.privacy === "public") {
         return true;
       }
 
+      // Private moments
       if (
         moment.privacy === "private" &&
+        journey.owner &&
+        String(journey.owner._id) === String(req.user)
+      ) {
+        return true;
+      }
+
+      // If privacy isn't explicitly defined,
+      // allow it for the journey owner.
+      if (
+        moment.privacy === undefined &&
+        journey.owner &&
         String(journey.owner._id) === String(req.user)
       ) {
         return true;
@@ -106,6 +145,10 @@ const getSingleJourney = async (req, res) => {
 
       return false;
     });
+
+    // -------------------------------------------------------
+    // RESPONSE
+    // -------------------------------------------------------
 
     res.json({
       journey,
@@ -126,6 +169,12 @@ const getSingleJourney = async (req, res) => {
 
 const updateJourney = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid journey ID.",
+      });
+    }
+
     const journey = await Journey.findOne({
       _id: req.params.id,
       owner: req.user,
@@ -138,7 +187,15 @@ const updateJourney = async (req, res) => {
     }
 
     if (req.body.title !== undefined) {
-      journey.title = req.body.title.trim();
+      const title = req.body.title.trim();
+
+      if (!title) {
+        return res.status(400).json({
+          message: "Journey title cannot be empty.",
+        });
+      }
+
+      journey.title = title;
     }
 
     if (req.body.description !== undefined) {
@@ -170,6 +227,12 @@ const updateJourney = async (req, res) => {
 
 const deleteJourney = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid journey ID.",
+      });
+    }
+
     const journey = await Journey.findOne({
       _id: req.params.id,
       owner: req.user,
@@ -181,10 +244,11 @@ const deleteJourney = async (req, res) => {
       });
     }
 
-    /*
-      Moments are NOT deleted automatically.
-      They become standalone moments.
-    */
+    // -------------------------------------------------------
+    // DO NOT DELETE MOMENTS
+    //
+    // They become standalone moments.
+    // -------------------------------------------------------
 
     await Post.updateMany(
       {
@@ -211,6 +275,10 @@ const deleteJourney = async (req, res) => {
     });
   }
 };
+
+// =========================================================
+// EXPORT
+// =========================================================
 
 module.exports = {
   createJourney,
