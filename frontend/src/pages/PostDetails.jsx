@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Calendar, Heart, User } from "lucide-react";
 
 import API from "../services/api";
-
 import "./PostDetails.css";
 
 function PostDetails() {
@@ -13,9 +12,23 @@ function PostDetails() {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // =========================================================
-  // FETCH SINGLE MOMENT
-  // =========================================================
+  /* =========================================================
+     BACKEND URL
+     ========================================================= */
+
+  const getBackendUrl = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    if (!apiUrl) {
+      return "";
+    }
+
+    return apiUrl.replace(/\/api\/?$/, "");
+  };
+
+  /* =========================================================
+     FETCH SINGLE MOMENT
+     ========================================================= */
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -42,17 +55,21 @@ function PostDetails() {
     }
   }, [id]);
 
-  // =========================================================
-  // MEDIA URL
-  // =========================================================
+  /* =========================================================
+     MEDIA URL
+     ========================================================= */
 
   const getMediaUrl = (media) => {
     if (!media) {
       return null;
     }
 
-    // If backend returns:
-    // media: { url: "...", type: "image" }
+    const backendUrl = getBackendUrl();
+
+    /* -------------------------------------------------------
+       CLOUDINARY / NEW MEDIA OBJECT
+       ------------------------------------------------------- */
+
     if (typeof media === "object") {
       const mediaUrl = media.url;
 
@@ -64,31 +81,49 @@ function PostDetails() {
         return mediaUrl;
       }
 
-      return `http://localhost:5000${mediaUrl.startsWith("/") ? "" : "/"}${mediaUrl}`;
+      if (!backendUrl) {
+        return mediaUrl;
+      }
+
+      return `${backendUrl}${mediaUrl.startsWith("/") ? "" : "/"}${mediaUrl}`;
     }
 
-    // If backend returns a string
+    /* -------------------------------------------------------
+       OLD STRING MEDIA FORMAT
+       ------------------------------------------------------- */
+
     if (typeof media === "string") {
-      // Already a complete URL
+      /* Already a complete URL */
+
       if (media.startsWith("http://") || media.startsWith("https://")) {
         return media;
       }
 
-      // If backend already gives /uploads/filename
+      /* Backend returns /uploads/filename */
+
       if (media.startsWith("/uploads/")) {
-        return `http://localhost:5000${media}`;
+        if (!backendUrl) {
+          return media;
+        }
+
+        return `${backendUrl}${media}`;
       }
 
-      // If backend gives only filename
-      return `http://localhost:5000/uploads/${media}`;
+      /* Backend returns only filename */
+
+      if (!backendUrl) {
+        return null;
+      }
+
+      return `${backendUrl}/uploads/${media}`;
     }
 
     return null;
   };
 
-  // =========================================================
-  // MEDIA TYPE
-  // =========================================================
+  /* =========================================================
+     MEDIA TYPE
+     ========================================================= */
 
   const getMediaType = (media) => {
     if (!media) {
@@ -102,9 +137,9 @@ function PostDetails() {
     return "";
   };
 
-  // =========================================================
-  // CHECK VIDEO
-  // =========================================================
+  /* =========================================================
+     CHECK VIDEO
+     ========================================================= */
 
   const isVideoFile = (media) => {
     if (!media) {
@@ -122,9 +157,9 @@ function PostDetails() {
     return /\.(mp4|webm|ogg|mov)$/i.test(mediaValue);
   };
 
-  // =========================================================
-  // LOADING
-  // =========================================================
+  /* =========================================================
+     LOADING
+     ========================================================= */
 
   if (loading) {
     return (
@@ -134,9 +169,9 @@ function PostDetails() {
     );
   }
 
-  // =========================================================
-  // NOT FOUND / ERROR
-  // =========================================================
+  /* =========================================================
+     NOT FOUND / ERROR
+     ========================================================= */
 
   if (!post) {
     return (
@@ -146,7 +181,7 @@ function PostDetails() {
 
           <p>This story may have been deleted or is temporarily unavailable.</p>
 
-          <Link to="/blogs" className="back-to-feed">
+          <Link to="/blogs" className="post-details-back">
             <ArrowLeft size={15} />
             Back to moments
           </Link>
@@ -155,22 +190,22 @@ function PostDetails() {
     );
   }
 
-  // =========================================================
-  // MEDIA
-  // =========================================================
+  /* =========================================================
+     MEDIA
+     ========================================================= */
 
   const mediaUrl = getMediaUrl(post.media);
   const isVideo = isVideoFile(post.media);
 
-  // =========================================================
-  // LIKES
-  // =========================================================
+  /* =========================================================
+     LIKES
+     ========================================================= */
 
   const likesCount = post.likesCount ?? post.likes?.length ?? 0;
 
-  // =========================================================
-  // DATE
-  // =========================================================
+  /* =========================================================
+     DATE
+     ========================================================= */
 
   const formattedDate = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -180,9 +215,9 @@ function PostDetails() {
       })
     : "";
 
-  // =========================================================
-  // RENDER
-  // =========================================================
+  /* =========================================================
+     RENDER
+     ========================================================= */
 
   return (
     <main className="post-details-page">
@@ -275,7 +310,7 @@ function PostDetails() {
           <div className="post-details-divider" />
 
           {/* =================================================
-              CONTENT
+              STORY CONTENT
               ================================================= */}
 
           <div className="post-details-text">{post.content}</div>

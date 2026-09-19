@@ -17,13 +17,16 @@ const app = express();
    CORS
    ========================================================= */
 
-/* =========================================================
-   CORS
-   ========================================================= */
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://mern-blog-delta-olive.vercel.app",
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: true,
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -59,7 +62,9 @@ connectDB();
    ========================================================= */
 
 app.use("/api/auth", authRoutes);
+
 app.use("/api/posts", postRoutes);
+
 app.use("/api/journeys", journeyRoutes);
 
 /* =========================================================
@@ -98,5 +103,5 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Memoire server running on port ${PORT} !!`);
+  console.log(`Memoire server running on port ${PORT}`);
 });

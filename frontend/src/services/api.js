@@ -1,13 +1,19 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+if (!API_BASE_URL) {
+  console.error("VITE_API_URL is not configured.");
+}
+
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 
-// =========================================================
-// REQUEST INTERCEPTOR
-// =========================================================
+/* =========================================================
+   REQUEST INTERCEPTOR
+   ========================================================= */
 
 API.interceptors.request.use(
   (config) => {
@@ -24,9 +30,9 @@ API.interceptors.request.use(
   },
 );
 
-// =========================================================
-// RESPONSE INTERCEPTOR
-// =========================================================
+/* =========================================================
+   RESPONSE INTERCEPTOR
+   ========================================================= */
 
 API.interceptors.response.use(
   (response) => {
@@ -34,9 +40,8 @@ API.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Don't automatically remove the token
-      // on every 401 yet. We can handle this
-      // more carefully once the protected routes are complete.
+      // Don't automatically remove the token.
+      // Protected routes can handle authentication separately.
     }
 
     return Promise.reject(error);
