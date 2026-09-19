@@ -8,7 +8,7 @@ import CreatePost from "./pages/CreatePost";
 import PostDetails from "./pages/PostDetails";
 import Profile from "./pages/Profile";
 import EditPost from "./pages/EditPost";
-import JourneyDetails from "./pages/JourneyDetails";
+import JourneyDetails from "./pages/JourneyPage";
 
 import NavBar from "./components/NavBar";
 import ProtectedRoute from "./components/ProtectedRoute";
