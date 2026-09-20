@@ -1,228 +1,151 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 
-import {
-  PenLine,
-  BookOpen,
-  User,
-  LogOut,
-} from "lucide-react";
+import API from "../services/api";
+import "./Login.css";
 
-import "./NavBar.css";
-
-function NavBar() {
+function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // =========================================================
-  // AUTHENTICATION STATE
-  // =========================================================
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // =========================================================
-  // CHECK LOGIN STATE
-  // =========================================================
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  useEffect(() => {
-    const checkAuth = () => {
-      setIsLoggedIn(
-        Boolean(localStorage.getItem("token"))
-      );
-    };
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    // Check whenever route changes
-    checkAuth();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Listen for login/logout events
-    window.addEventListener("auth-change", checkAuth);
+    setError("");
 
-    return () => {
-      window.removeEventListener("auth-change", checkAuth);
-    };
-  }, [location.pathname]);
-
-  // =========================================================
-  // LOGOUT
-  // =========================================================
-
-  const logout = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to log out?"
-    );
-
-    if (!confirmed) {
+    if (!formData.email || !formData.password) {
+      setError("Please enter your email and password.");
       return;
     }
 
-    // Remove authentication information
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userId");
+    setLoading(true);
 
-    // Update Navbar immediately
-    setIsLoggedIn(false);
+    try {
+      const response = await API.post("/auth/login", formData);
 
-    // Notify other components
-    window.dispatchEvent(
-      new Event("auth-change")
-    );
+      console.log("LOGIN RESPONSE:", response.data);
 
-    // Go to home
-    navigate("/");
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+
+      if (response.data.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        if (response.data.user._id) {
+          localStorage.setItem("userId", response.data.user._id);
+        }
+      }
+
+      window.dispatchEvent(new Event("auth-change"));
+
+      navigate("/profile");
+    } catch (err) {
+      console.error("LOGIN ERROR:", err.response?.data || err);
+
+      setError(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Login failed. Please check your credentials.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
-
-  // =========================================================
-  // ACTIVE LINK
-  // =========================================================
-
-  const isActive = (path) => {
-    return location.pathname === path
-      ? "active"
-      : "";
-  };
-
-  // =========================================================
-  // RENDER
-  // =========================================================
 
   return (
-    <header className="navbar">
+    <main className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-logo">MEMOIRE</div>
 
-      <div className="navbar-container">
+          <h1>Welcome back.</h1>
 
-        {/* ===================================================
-            BRAND
-        =================================================== */}
-
-        <Link
-          to="/"
-          className="navbar-brand"
-        >
-          <span className="brand-name">
-            MEMOIRE
-          </span>
-
-          <span className="brand-tagline">
-            Your story, one moment at a time.
-          </span>
-        </Link>
-
-
-        {/* ===================================================
-            NAVIGATION
-        =================================================== */}
-
-        <nav className="nav-links">
-
-          {/* =================================================
-              HOME
-
-              Only visible when user is NOT logged in
-          ================================================= */}
-
-          {!isLoggedIn && (
-            <Link
-              to="/"
-              className={isActive("/")}
-            >
-              Home
-            </Link>
-          )}
-
-
-          {/* =================================================
-              EXPLORE
-
-              Visible to everyone
-          ================================================= */}
-
-          <Link
-            to="/blogs"
-            className={isActive("/blogs")}
-          >
-            <BookOpen size={15} />
-            Explore
-          </Link>
-
-
-          {/* =================================================
-              LOGGED-IN NAVIGATION
-          ================================================= */}
-
-          {isLoggedIn && (
-            <>
-              <Link
-                to="/create"
-                className={isActive("/create")}
-              >
-                <PenLine size={15} />
-                Write a Moment
-              </Link>
-
-              <Link
-                to="/profile"
-                className={isActive("/profile")}
-              >
-                <User size={15} />
-                Profile
-              </Link>
-            </>
-          )}
-
-        </nav>
-
-
-        {/* ===================================================
-            RIGHT SIDE ACTIONS
-        =================================================== */}
-
-        <div className="nav-actions">
-
-          {isLoggedIn ? (
-
-            /* ================= LOGGED IN ================= */
-
-            <button
-              className="logout-btn"
-              onClick={logout}
-              type="button"
-            >
-              <LogOut size={15} />
-              Logout
-            </button>
-
-          ) : (
-
-            /* ================= LOGGED OUT ================= */
-
-            <>
-              <Link
-                to="/login"
-                className="login-btn"
-              >
-                Sign in
-              </Link>
-
-              <Link
-                to="/register"
-                className="join-btn"
-              >
-                Start Writing
-                <span>→</span>
-              </Link>
-            </>
-
-          )}
-
+          <p>Continue writing your story, one moment at a time.</p>
         </div>
 
-      </div>
+        {error && <div className="login-error">{error}</div>}
 
-    </header>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="login-field">
+            <label htmlFor="email">Email</label>
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              autoComplete="email"
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="password">Password</label>
+
+            <div className="password-wrapper">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" className="login-submit" disabled={loading}>
+            {loading ? (
+              "Signing in..."
+            ) : (
+              <>
+                Sign in
+                <ArrowRight size={17} />
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="login-footer">
+          <span>Don't have an account?</span>
+
+          <Link to="/register">Create an account</Link>
+        </div>
+      </div>
+    </main>
   );
 }
 
-export default NavBar;
+export default Login;

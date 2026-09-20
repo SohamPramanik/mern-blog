@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import API from "../services/api";
-import "./JourneyDetails.css";
+import "./JourneyPage.css";
 
 function JourneyDetails() {
   const { id } = useParams();

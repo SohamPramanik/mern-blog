@@ -1,62 +1,54 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PenLine, BookOpen, User, LogOut } from "lucide-react";
-
 import "./NavBar.css";
 
 function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [token, setToken] = useState(localStorage.getItem("token"));
-
-  // =========================================================
-  // KEEP LOGIN STATE IN SYNC
-  // =========================================================
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token")),
+  );
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
-  }, [location.pathname]);
+    const checkAuth = () => {
+      setIsLoggedIn(Boolean(localStorage.getItem("token")));
+    };
 
-  // =========================================================
-  // LOGOUT
-  // =========================================================
+    checkAuth();
+
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", checkAuth);
+    };
+  }, [location.pathname]);
 
   const logout = () => {
     const confirmed = window.confirm("Are you sure you want to log out?");
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
 
-    setToken(null);
+    setIsLoggedIn(false);
+
+    window.dispatchEvent(new Event("auth-change"));
 
     navigate("/");
   };
-
-  // =========================================================
-  // ACTIVE LINK
-  // =========================================================
 
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
   };
 
-  // =========================================================
-  // RENDER
-  // =========================================================
-
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* =================================================
-            BRAND
-        ================================================= */}
-
+        {/* BRAND */}
         <Link to="/" className="navbar-brand">
           <span className="brand-name">MEMOIRE</span>
 
@@ -65,40 +57,23 @@ function NavBar() {
           </span>
         </Link>
 
-        {/* =================================================
-            NAVIGATION
-        ================================================= */}
-
+        {/* NAVIGATION */}
         <nav className="nav-links">
-          {/* =================================================
-              HOME
-
-              IMPORTANT:
-              Home is ONLY shown when logged OUT.
-          ================================================= */}
-
-          {!token && (
+          {/* HOME ONLY WHEN LOGGED OUT */}
+          {!isLoggedIn && (
             <Link to="/" className={isActive("/")}>
               Home
             </Link>
           )}
 
-          {/* =================================================
-              EXPLORE
-
-              Available to everyone.
-          ================================================= */}
-
+          {/* EXPLORE */}
           <Link to="/blogs" className={isActive("/blogs")}>
             <BookOpen size={15} />
             Explore
           </Link>
 
-          {/* =================================================
-              LOGGED-IN NAVIGATION
-          ================================================= */}
-
-          {token && (
+          {/* LOGGED-IN LINKS */}
+          {isLoggedIn && (
             <>
               <Link to="/create" className={isActive("/create")}>
                 <PenLine size={15} />
@@ -113,12 +88,9 @@ function NavBar() {
           )}
         </nav>
 
-        {/* =================================================
-            ACTIONS
-        ================================================= */}
-
+        {/* RIGHT SIDE */}
         <div className="nav-actions">
-          {token ? (
+          {isLoggedIn ? (
             <button className="logout-btn" onClick={logout} type="button">
               <LogOut size={15} />
               Logout
