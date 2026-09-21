@@ -26,6 +26,7 @@ import "./CreatePost.css";
 function CreatePost() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const journeyDropdownRef = useRef(null);
 
   const [mode, setMode] = useState("existing");
 
@@ -44,6 +45,7 @@ function CreatePost() {
   const [dragActive, setDragActive] = useState(false);
 
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showJourneyDropdown, setShowJourneyDropdown] = useState(false);
 
   const [loadingJourneys, setLoadingJourneys] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -79,6 +81,27 @@ function CreatePost() {
   }, []);
 
   /* =========================================================
+     JOURNEY DROPDOWN
+     ========================================================= */
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        journeyDropdownRef.current &&
+        !journeyDropdownRef.current.contains(event.target)
+      ) {
+        setShowJourneyDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  /* =========================================================
      CLEAN MEDIA PREVIEW
      ========================================================= */
 
@@ -97,6 +120,7 @@ function CreatePost() {
   const handleModeChange = (newMode) => {
     setMode(newMode);
     setErrorMsg("");
+    setShowJourneyDropdown(false);
 
     if (newMode !== "existing") {
       setSelectedJourney("");
@@ -125,9 +149,7 @@ function CreatePost() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      setErrorMsg(
-        "Only JPG, PNG, WEBP, GIF, MP4 and WEBM files are allowed."
-      );
+      setErrorMsg("Only JPG, PNG, WEBP, GIF, MP4 and WEBM files are allowed.");
       return;
     }
 
@@ -278,7 +300,7 @@ function CreatePost() {
 
       setErrorMsg(
         error?.response?.data?.message ||
-          "Something went wrong while saving your moment."
+          "Something went wrong while saving your moment.",
       );
     } finally {
       setSaving(false);
@@ -295,7 +317,6 @@ function CreatePost() {
 
   return (
     <main className="create-page">
-
       {/* Ambient decoration */}
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
@@ -306,18 +327,12 @@ function CreatePost() {
           ===================================================== */}
 
       <section className="create-layout">
-
         {/* ===================================================
             WRITING AREA
             =================================================== */}
 
-        <form
-          className="writing-section"
-          onSubmit={handleSubmit}
-        >
-
+        <form className="writing-section" onSubmit={handleSubmit}>
           <div className="writing-intro">
-
             <div className="intro-decoration">
               <span />
               <span />
@@ -325,8 +340,7 @@ function CreatePost() {
             </div>
 
             <span className="writing-eyebrow">
-              <PenLine size={14} />
-              A NEW MOMENT
+              <PenLine size={14} />A NEW MOMENT
             </span>
 
             <h1>
@@ -334,19 +348,15 @@ function CreatePost() {
             </h1>
 
             <p>
-              Write it the way you remember it.
-              There is no perfect way to tell a story.
+              Write it the way you remember it. There is no perfect way to tell
+              a story.
             </p>
-
           </div>
 
           {/* TITLE */}
 
           <div className="title-area">
-
-            <div className="field-label">
-              MOMENT TITLE
-            </div>
+            <div className="field-label">MOMENT TITLE</div>
 
             <input
               type="text"
@@ -358,19 +368,13 @@ function CreatePost() {
               required
             />
 
-            <div className="title-count">
-              {title.length}/150
-            </div>
-
+            <div className="title-count">{title.length}/150</div>
           </div>
 
           {/* CONTENT */}
 
           <div className="content-area">
-
-            <div className="field-label">
-              YOUR STORY
-            </div>
+            <div className="field-label">YOUR STORY</div>
 
             <textarea
               value={content}
@@ -383,70 +387,50 @@ function CreatePost() {
             />
 
             <div className="content-footer">
-              <span>
-                {content.length.toLocaleString()} characters
-              </span>
+              <span>{content.length.toLocaleString()} characters</span>
 
               <span className="private-note">
                 <Lock size={11} />
                 Your words stay yours.
               </span>
             </div>
-
           </div>
 
           {/* MEDIA */}
 
           <div className="media-section">
-
             <div className="media-heading">
-
               <div>
-                <span className="section-kicker">
-                  OPTIONAL
-                </span>
+                <span className="section-kicker">OPTIONAL</span>
 
                 <h3>Add to the memory</h3>
 
-                <p>
-                  A photo or video can make the moment feel alive again.
-                </p>
+                <p>A photo or video can make the moment feel alive again.</p>
               </div>
-
             </div>
 
             {!mediaFile ? (
-
               <div
-                className={`media-dropzone ${
-                  dragActive ? "drag-active" : ""
-                }`}
+                className={`media-dropzone ${dragActive ? "drag-active" : ""}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
               >
-
                 <div className="upload-icon">
                   <ImagePlus size={23} />
                 </div>
 
                 <div className="upload-text">
+                  <strong>Add a photo or video</strong>
 
-                  <strong>
-                    Add a photo or video
-                  </strong>
-
-                  <span>
-                    Drag & drop here or click to browse
-                  </span>
+                  <span>Drag & drop here or click to browse</span>
 
                   <small>
                     JPG · PNG · WEBP · GIF · MP4 · WEBM
                     <br />
                     Maximum 20 MB
                   </small>
-
                 </div>
 
                 <div className="upload-button">
@@ -461,37 +445,20 @@ function CreatePost() {
                   onChange={handleFileChange}
                   hidden
                 />
-
               </div>
-
             ) : (
-
               <div className="media-preview">
-
                 {isVideo ? (
-                  <video
-                    src={mediaPreview}
-                    controls
-                  />
+                  <video src={mediaPreview} controls />
                 ) : (
-                  <img
-                    src={mediaPreview}
-                    alt="Moment preview"
-                  />
+                  <img src={mediaPreview} alt="Moment preview" />
                 )}
 
                 <div className="media-overlay">
-
                   <div className="media-file-info">
-                    {isVideo ? (
-                      <Play size={15} />
-                    ) : (
-                      <FileImage size={15} />
-                    )}
+                    {isVideo ? <Play size={15} /> : <FileImage size={15} />}
 
-                    <span>
-                      {mediaFile.name}
-                    </span>
+                    <span>{mediaFile.name}</span>
                   </div>
 
                   <button
@@ -502,12 +469,9 @@ function CreatePost() {
                   >
                     <X size={17} />
                   </button>
-
                 </div>
-
               </div>
             )}
-
           </div>
 
           {/* ERROR */}
@@ -522,22 +486,16 @@ function CreatePost() {
           {/* ACTION */}
 
           <div className="writing-actions">
-
             <div className="writing-ai-note">
               <Sparkles size={15} />
 
               <span>
-                Memoire may understand the emotions and themes
-                inside this moment — your words will never be rewritten.
+                Memoire may understand the emotions and themes inside this
+                moment — your words will never be rewritten.
               </span>
             </div>
 
-            <button
-              type="submit"
-              className="publish-button"
-              disabled={saving}
-            >
-
+            <button type="submit" className="publish-button" disabled={saving}>
               {saving ? (
                 <>
                   <span className="button-spinner" />
@@ -549,11 +507,8 @@ function CreatePost() {
                   <ArrowRight size={17} />
                 </>
               )}
-
             </button>
-
           </div>
-
         </form>
 
         {/* ===================================================
@@ -561,37 +516,27 @@ function CreatePost() {
             =================================================== */}
 
         <aside className="story-settings">
-
           <div className="settings-panel">
-
             <div className="panel-top-line" />
 
             {/* JOURNEY */}
 
             <div className="settings-block">
-
               <div className="settings-heading">
-
                 <div className="settings-heading-icon">
                   <BookOpen size={17} />
                 </div>
 
                 <div>
-                  <span className="panel-kicker">
-                    ORGANIZE
-                  </span>
+                  <span className="panel-kicker">ORGANIZE</span>
 
                   <h3>Where does this belong?</h3>
 
-                  <p>
-                    Connect this moment to your story.
-                  </p>
+                  <p>Connect this moment to your story.</p>
                 </div>
-
               </div>
 
               <div className="journey-options">
-
                 {/* Existing */}
 
                 <button
@@ -601,11 +546,8 @@ function CreatePost() {
                   }`}
                   onClick={() => handleModeChange("existing")}
                 >
-
                   <div className="option-radio">
-                    {mode === "existing" && (
-                      <Check size={12} />
-                    )}
+                    {mode === "existing" && <Check size={12} />}
                   </div>
 
                   <div className="option-content">
@@ -619,7 +561,6 @@ function CreatePost() {
                   {mode === "existing" && (
                     <span className="option-number">01</span>
                   )}
-
                 </button>
 
                 {/* New */}
@@ -631,25 +572,17 @@ function CreatePost() {
                   }`}
                   onClick={() => handleModeChange("new")}
                 >
-
                   <div className="option-radio">
-                    {mode === "new" && (
-                      <Check size={12} />
-                    )}
+                    {mode === "new" && <Check size={12} />}
                   </div>
 
                   <div className="option-content">
                     <strong>Start a New Journey</strong>
 
-                    <span>
-                      Give a new chapter of your life a beginning.
-                    </span>
+                    <span>Give a new chapter of your life a beginning.</span>
                   </div>
 
-                  {mode === "new" && (
-                    <span className="option-number">02</span>
-                  )}
-
+                  {mode === "new" && <span className="option-number">02</span>}
                 </button>
 
                 {/* Standalone */}
@@ -661,109 +594,138 @@ function CreatePost() {
                   }`}
                   onClick={() => handleModeChange("standalone")}
                 >
-
                   <div className="option-radio">
-                    {mode === "standalone" && (
-                      <Check size={12} />
-                    )}
+                    {mode === "standalone" && <Check size={12} />}
                   </div>
 
                   <div className="option-content">
                     <strong>Standalone Moment</strong>
 
-                    <span>
-                      Keep this moment on its own.
-                    </span>
+                    <span>Keep this moment on its own.</span>
                   </div>
 
                   {mode === "standalone" && (
                     <span className="option-number">03</span>
                   )}
-
                 </button>
-
               </div>
 
               {/* Existing journeys */}
 
               {mode === "existing" && (
-
                 <div className="journey-select-area">
-
-                  <label>
-                    CHOOSE A JOURNEY
-                  </label>
+                  <label>CHOOSE A JOURNEY</label>
 
                   {loadingJourneys ? (
-
                     <div className="journey-loading">
                       <span className="mini-spinner" />
                       Loading your journeys...
                     </div>
-
                   ) : journeys.length > 0 ? (
-
-                    <div className="select-wrapper">
-
-                      <BookOpen size={16} />
-
-                      <select
-                        value={selectedJourney}
-                        onChange={(e) =>
-                          setSelectedJourney(e.target.value)
+                    <div className="journey-dropdown" ref={journeyDropdownRef}>
+                      <button
+                        type="button"
+                        className={`journey-dropdown-trigger ${
+                          showJourneyDropdown ? "open" : ""
+                        }`}
+                        onClick={() =>
+                          setShowJourneyDropdown(!showJourneyDropdown)
                         }
+                        aria-haspopup="listbox"
+                        aria-expanded={showJourneyDropdown}
                       >
+                        <span className="journey-dropdown-left">
+                          <BookOpen size={16} />
+                          <span>
+                            {journeys.find(
+                              (journey) =>
+                                (journey._id || journey.id) === selectedJourney,
+                            )?.title ||
+                              journeys.find(
+                                (journey) =>
+                                  (journey._id || journey.id) ===
+                                  selectedJourney,
+                              )?.name ||
+                              "Choose a journey"}
+                          </span>
+                        </span>
 
-                        {journeys.map((journey) => (
-                          <option
-                            key={journey._id || journey.id}
-                            value={journey._id || journey.id}
-                          >
-                            {journey.title ||
+                        <ChevronDown
+                          size={16}
+                          className="journey-dropdown-chevron"
+                        />
+                      </button>
+
+                      {showJourneyDropdown && (
+                        <div
+                          className="journey-dropdown-menu"
+                          role="listbox"
+                          aria-label="Choose a journey"
+                        >
+                          <div className="journey-dropdown-label">
+                            YOUR JOURNEYS
+                          </div>
+
+                          {journeys.map((journey, index) => {
+                            const journeyId = journey._id || journey.id;
+                            const journeyName =
+                              journey.title ||
                               journey.name ||
-                              "Untitled Journey"}
-                          </option>
-                        ))}
+                              "Untitled Journey";
 
-                      </select>
+                            return (
+                              <button
+                                key={journeyId}
+                                type="button"
+                                role="option"
+                                aria-selected={selectedJourney === journeyId}
+                                className={`journey-dropdown-option ${
+                                  selectedJourney === journeyId
+                                    ? "selected"
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setSelectedJourney(journeyId);
+                                  setShowJourneyDropdown(false);
+                                }}
+                              >
+                                <span className="journey-option-index">
+                                  {String(index + 1).padStart(2, "0")}
+                                </span>
 
-                      <ChevronDown size={15} />
+                                <span className="journey-option-name">
+                                  {journeyName}
+                                </span>
 
+                                {selectedJourney === journeyId && (
+                                  <Check size={15} />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-
                   ) : (
-
                     <div className="no-journeys">
-
                       <BookOpen size={18} />
 
                       <div>
                         <strong>No journeys yet</strong>
-                        <span>
-                          Start your first one below.
-                        </span>
+                        <span>Start your first one below.</span>
                       </div>
-
                     </div>
-
                   )}
-
                 </div>
-
               )}
 
               {/* New journey */}
 
               {mode === "new" && (
-
                 <div className="new-journey-area">
-
-                  <label htmlFor="journey-name">
-                    JOURNEY NAME
-                  </label>
+                  <label htmlFor="journey-name">JOURNEY NAME</label>
 
                   <div className="new-journey-input">
-
                     <Plus size={16} />
 
                     <input
@@ -771,22 +733,14 @@ function CreatePost() {
                       type="text"
                       placeholder="e.g. My College Journey"
                       value={newJourneyName}
-                      onChange={(e) =>
-                        setNewJourneyName(e.target.value)
-                      }
+                      onChange={(e) => setNewJourneyName(e.target.value)}
                       maxLength={80}
                     />
-
                   </div>
 
-                  <small>
-                    You can add more moments to this journey later.
-                  </small>
-
+                  <small>You can add more moments to this journey later.</small>
                 </div>
-
               )}
-
             </div>
 
             <div className="settings-divider" />
@@ -794,29 +748,21 @@ function CreatePost() {
             {/* DATE */}
 
             <div className="settings-block">
-
               <div className="settings-heading">
-
                 <div className="settings-heading-icon">
                   <CalendarDays size={17} />
                 </div>
 
                 <div>
-                  <span className="panel-kicker">
-                    TIMELINE
-                  </span>
+                  <span className="panel-kicker">TIMELINE</span>
 
                   <h3>Moment details</h3>
 
-                  <p>
-                    A little context for your memory.
-                  </p>
+                  <p>A little context for your memory.</p>
                 </div>
-
               </div>
 
               <div className="date-display">
-
                 <div className="date-icon">
                   <CalendarDays size={17} />
                 </div>
@@ -825,9 +771,7 @@ function CreatePost() {
                   <span>Published date</span>
                   <strong>{formattedDate}</strong>
                 </div>
-
               </div>
-
             </div>
 
             <div className="settings-divider" />
@@ -835,37 +779,24 @@ function CreatePost() {
             {/* PRIVACY */}
 
             <div className="settings-block">
-
               <div className="settings-heading">
-
-                <div className="settings-heading-icon">
-                  {getPrivacyIcon()}
-                </div>
+                <div className="settings-heading-icon">{getPrivacyIcon()}</div>
 
                 <div>
-                  <span className="panel-kicker">
-                    VISIBILITY
-                  </span>
+                  <span className="panel-kicker">VISIBILITY</span>
 
                   <h3>Who can see this?</h3>
 
-                  <p>
-                    You control who gets to read your moment.
-                  </p>
+                  <p>You control who gets to read your moment.</p>
                 </div>
-
               </div>
 
               <div className="privacy-selector">
-
                 <button
                   type="button"
                   className="privacy-current"
-                  onClick={() =>
-                    setShowPrivacy(!showPrivacy)
-                  }
+                  onClick={() => setShowPrivacy(!showPrivacy)}
                 >
-
                   <div className="privacy-current-left">
                     {getPrivacyIcon()}
                     <span>{getPrivacyLabel()}</span>
@@ -873,138 +804,97 @@ function CreatePost() {
 
                   <ChevronDown
                     size={15}
-                    className={
-                      showPrivacy ? "chevron-open" : ""
-                    }
+                    className={showPrivacy ? "chevron-open" : ""}
                   />
-
                 </button>
 
                 {showPrivacy && (
-
                   <div className="privacy-dropdown">
-
                     <button
                       type="button"
                       className={`privacy-option ${
-                        privacy === "public"
-                          ? "selected"
-                          : ""
+                        privacy === "public" ? "selected" : ""
                       }`}
                       onClick={() => {
                         setPrivacy("public");
                         setShowPrivacy(false);
                       }}
                     >
-
                       <Globe2 size={17} />
 
                       <div>
                         <strong>Everyone</strong>
-                        <span>
-                          Anyone can discover this moment.
-                        </span>
+                        <span>Anyone can discover this moment.</span>
                       </div>
 
-                      {privacy === "public" && (
-                        <Check size={15} />
-                      )}
-
+                      {privacy === "public" && <Check size={15} />}
                     </button>
 
                     <button
                       type="button"
                       className={`privacy-option ${
-                        privacy === "followers"
-                          ? "selected"
-                          : ""
+                        privacy === "followers" ? "selected" : ""
                       }`}
                       onClick={() => {
                         setPrivacy("followers");
                         setShowPrivacy(false);
                       }}
                     >
-
                       <Users size={17} />
 
                       <div>
                         <strong>Followers</strong>
-                        <span>
-                          Only people who follow you.
-                        </span>
+                        <span>Only people who follow you.</span>
                       </div>
 
-                      {privacy === "followers" && (
-                        <Check size={15} />
-                      )}
-
+                      {privacy === "followers" && <Check size={15} />}
                     </button>
 
                     <button
                       type="button"
                       className={`privacy-option ${
-                        privacy === "private"
-                          ? "selected"
-                          : ""
+                        privacy === "private" ? "selected" : ""
                       }`}
                       onClick={() => {
                         setPrivacy("private");
                         setShowPrivacy(false);
                       }}
                     >
-
                       <Lock size={17} />
 
                       <div>
                         <strong>Only me</strong>
-                        <span>
-                          Keep this moment private.
-                        </span>
+                        <span>Keep this moment private.</span>
                       </div>
 
-                      {privacy === "private" && (
-                        <Check size={15} />
-                      )}
-
+                      {privacy === "private" && <Check size={15} />}
                     </button>
-
                   </div>
-
                 )}
-
               </div>
-
             </div>
 
             {/* PHILOSOPHY */}
 
             <div className="philosophy-card">
-
               <div className="philosophy-icon">
                 <Heart size={16} />
               </div>
 
               <div>
-                <span className="philosophy-label">
-                  MEMOIRE PHILOSOPHY
-                </span>
+                <span className="philosophy-label">MEMOIRE PHILOSOPHY</span>
 
                 <strong>Keep it human.</strong>
 
                 <p>
-                  Write naturally. Your memories belong
-                  to you — not to an algorithm.
+                  Write naturally. Your memories belong to you — not to an
+                  algorithm.
                 </p>
               </div>
-
             </div>
-
           </div>
-
         </aside>
-
       </section>
-
     </main>
   );
 }
