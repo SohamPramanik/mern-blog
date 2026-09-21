@@ -949,18 +949,65 @@ function Home() {
 
       {/* ================= FOOTER ================= */}
       <footer className="hm-footer">
-        <div className="hm-wrap hm-footer-inner">
-          <div>
-            <span className="hm-wordmark">Memoire</span>
-            <p>Your story, one moment at a time.</p>
+        <div className="hm-wrap">
+          <div className="hm-footer-main">
+            <div className="hm-footer-brand">
+              <span className="hm-wordmark">Memoire</span>
+              <p>Your story, one moment at a time.</p>
+              <span className="hm-footer-note">
+                Keep the moments. Remember the journey.
+              </span>
+            </div>
+
+            <div className="hm-footer-links">
+              <div className="hm-footer-column">
+                <span className="hm-footer-label">Discover</span>
+                <Link to="/blogs">Explore stories</Link>
+                <Link to="/register">Start writing</Link>
+              </div>
+
+              <div className="hm-footer-column">
+                <span className="hm-footer-label">Memoire</span>
+                <Link to="/blogs">Moments</Link>
+                <Link to="/register">Create your story</Link>
+              </div>
+
+              <div className="hm-footer-column">
+                <span className="hm-footer-label">Connect</span>
+                <div className="hm-footer-socials">
+                  <a
+                    href="https://www.instagram.com/iam_sohxm/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Instagram"
+                  >
+                    Instagram
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/soham-pramanik/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="LinkedIn"
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href="https://github.com/SohamPramanik"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="GitHub"
+                  >
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <nav aria-label="Footer">
-            <Link to="/blogs">Explore stories</Link>
-            <Link to="/register">Start writing</Link>
-          </nav>
-
-          <p className="hm-footer-copy">&copy; 2026 Memoire</p>
+          <div className="hm-footer-bottom">
+            <p>&copy; 2026 Memoire. Built to remember what matters.</p>
+            <span>Made with <Heart size={13} fill="currentColor" aria-hidden="true" /> by Soham</span>
+          </div>
         </div>
       </footer>
     </main>
