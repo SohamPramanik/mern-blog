@@ -1,21 +1,59 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:wght@400..700&display=swap");
 
 /* =========================================================
-   PAGE
+   MEMOIRE REGISTER
+   Matches the Memoire Home theme
    ========================================================= */
 
 .register-page {
-  min-height: calc(100vh - 78px);
+  --paper: #f4f5f1;
+  --paper-2: #e8ece6;
+  --surface: #ffffff;
+
+  --ink: #0f1f2e;
+  --ink-2: #3e4f60;
+  --ink-3: #5d6d7c;
+
+  --line: #d9ded9;
+  --line-2: #c5ccc8;
+
+  --night: #0c1a27;
+  --night-2: #132433;
+  --night-line: #26384a;
+  --night-text: #a8b7c5;
+
+  --focus: #2f7fb8;
+
+  --serif:
+    "Fraunces",
+    "Iowan Old Style",
+    "Palatino Linotype",
+    Georgia,
+    serif;
+
+  --sans:
+    "Instrument Sans",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
+  min-height: calc(100vh - 72px);
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.9fr);
 
-  background: #faf9f6;
+  background: var(--paper);
+  color: var(--ink);
 
-  color: #1e1e1c;
+  font-family: var(--sans);
+  line-height: 1.6;
 
-  font-family: "DM Sans", sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+
 
 /* =========================================================
    LEFT STORY PANEL
@@ -24,53 +62,76 @@
 .register-story {
   position: relative;
 
-  min-height: calc(100vh - 78px);
+  min-height: calc(100vh - 72px);
 
-  padding: 55px 8%;
+  padding: clamp(40px, 6vw, 80px);
 
   display: flex;
   flex-direction: column;
 
-  background: #f2f0ea;
+  background: var(--paper);
 
-  border-right: 1px solid #e5e2da;
+  border-right: 1px solid var(--line);
 
   overflow: hidden;
 }
 
-/* Decorative circles */
+
+/* Subtle dot grid — same language as Home hero */
 
 .register-story::before {
   content: "";
 
   position: absolute;
+  inset: 0;
 
-  width: 500px;
-  height: 500px;
+  pointer-events: none;
 
-  right: -250px;
-  bottom: -250px;
+  background-image:
+    radial-gradient(var(--line-2) 1px, transparent 1.3px);
 
-  border: 1px solid #dfdbd2;
+  background-size: 24px 24px;
 
-  border-radius: 50%;
+  opacity: 0.55;
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0%,
+      transparent 82%
+    );
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0%,
+      transparent 82%
+    );
 }
+
+
+/* Large editorial circles */
 
 .register-story::after {
   content: "";
 
   position: absolute;
 
-  width: 330px;
-  height: 330px;
+  width: 560px;
+  height: 560px;
 
-  right: -165px;
-  bottom: -165px;
+  right: -300px;
+  bottom: -300px;
 
-  border: 1px solid #dfdbd2;
+  border: 1px solid var(--line);
 
   border-radius: 50%;
+
+  box-shadow:
+    0 0 0 70px rgba(197, 204, 200, 0.18),
+    0 0 0 140px rgba(197, 204, 200, 0.08);
 }
+
 
 /* =========================================================
    BRAND
@@ -82,15 +143,22 @@
 
   width: fit-content;
 
-  color: #1e1e1c;
+  color: var(--ink);
 
   text-decoration: none;
 
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
 
   letter-spacing: 3px;
+
+  transition: opacity 0.2s ease;
 }
+
+.register-brand:hover {
+  opacity: 0.7;
+}
+
 
 /* =========================================================
    STORY CONTENT
@@ -100,58 +168,78 @@
   position: relative;
   z-index: 2;
 
-  max-width: 560px;
+  max-width: 650px;
 
   margin: auto 0;
 }
+
 
 .story-eyebrow {
   display: inline-flex;
   align-items: center;
 
-  gap: 8px;
+  gap: 9px;
 
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 
-  color: #8b5e3c;
+  color: var(--focus);
 
   font-size: 10px;
   font-weight: 700;
 
   letter-spacing: 2.5px;
+  text-transform: uppercase;
 }
+
+
+.story-eyebrow::before {
+  content: "";
+
+  width: 28px;
+  height: 1px;
+
+  background: var(--focus);
+}
+
 
 .story-content h1 {
   margin: 0;
 
-  font-family: "Playfair Display", serif;
+  max-width: 11ch;
 
-  font-size: clamp(48px, 5vw, 70px);
+  font-family: var(--serif);
 
-  line-height: 1.04;
+  font-size: clamp(3.2rem, 5.5vw, 5.4rem);
 
-  font-weight: 500;
+  line-height: 1.02;
 
-  letter-spacing: -1.5px;
+  font-weight: 380;
+
+  letter-spacing: -0.035em;
 }
+
 
 .story-content h1 em {
-  color: #8b5e3c;
+  color: var(--focus);
 
-  font-weight: 500;
+  font-weight: 380;
 }
+
+
+/* Description */
 
 .story-content > p {
-  max-width: 500px;
+  max-width: 46ch;
 
-  margin: 30px 0 35px;
+  margin: 30px 0 36px;
 
-  color: #706d66;
+  color: var(--ink-2);
 
-  font-size: 15px;
+  font-size: 16px;
 
-  line-height: 1.85;
+  line-height: 1.75;
 }
+
 
 /* =========================================================
    DECORATIVE LINE
@@ -161,29 +249,30 @@
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  gap: 8px;
 
-  margin-bottom: 38px;
+  margin-bottom: 36px;
 }
 
 .story-line-decoration span {
   display: block;
 
-  width: 35px;
+  width: 32px;
   height: 1px;
 
-  background: #d8d3ca;
+  background: var(--line-2);
 }
 
 .story-line-decoration span:nth-child(2) {
-  width: 65px;
+  width: 70px;
 
-  background: #8b5e3c;
+  background: var(--focus);
 }
 
 .story-line-decoration span:nth-child(3) {
-  width: 20px;
+  width: 18px;
 }
+
 
 /* =========================================================
    QUOTE
@@ -198,7 +287,7 @@
 
   max-width: 430px;
 
-  color: #77736c;
+  color: var(--ink-3);
 }
 
 .story-quote svg {
@@ -206,15 +295,15 @@
 
   margin-top: 3px;
 
-  color: #8b5e3c;
+  color: var(--focus);
 }
 
 .story-quote p {
   margin: 0 0 8px;
 
-  font-family: "Playfair Display", serif;
+  font-family: var(--serif);
 
-  font-size: 15px;
+  font-size: 16px;
 
   font-style: italic;
 
@@ -228,8 +317,9 @@
 
   letter-spacing: 2px;
 
-  color: #aaa59c;
+  color: #8996a1;
 }
+
 
 /* =========================================================
    STORY FOOTER
@@ -239,21 +329,24 @@
   position: relative;
   z-index: 2;
 
-  color: #99958c;
+  color: #8996a1;
 
   font-size: 10px;
 
   letter-spacing: 1px;
 }
 
+
 /* =========================================================
    RIGHT FORM SECTION
    ========================================================= */
 
 .register-form-section {
+  position: relative;
+
   min-height: 100%;
 
-  padding: 55px 8%;
+  padding: clamp(40px, 6vw, 80px);
 
   display: flex;
 
@@ -261,105 +354,152 @@
 
   justify-content: center;
 
-  background: #faf9f6;
+  background: var(--surface);
 }
 
+
+/* Subtle background glow */
+
+.register-form-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  right: -220px;
+  top: -220px;
+
+  border-radius: 50%;
+
+  border: 1px solid var(--line);
+
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   REGISTER CARD
+   ========================================================= */
+
 .register-card {
+  position: relative;
+  z-index: 2;
+
   width: 100%;
 
   max-width: 480px;
 }
+
 
 /* =========================================================
    HEADER
    ========================================================= */
 
 .register-header {
-  margin-bottom: 35px;
+  margin-bottom: 34px;
 }
 
 .form-label {
   display: block;
 
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 
-  color: #8b5e3c;
+  color: var(--focus);
 
-  font-size: 9px;
+  font-size: 10px;
 
   font-weight: 700;
 
   letter-spacing: 2.5px;
+
+  text-transform: uppercase;
 }
+
 
 .register-header h2 {
   margin: 0;
 
-  font-family: "Playfair Display", serif;
+  font-family: var(--serif);
 
-  font-size: clamp(38px, 4vw, 52px);
+  font-size: clamp(2.5rem, 4vw, 3.6rem);
 
-  line-height: 1.1;
+  line-height: 1.05;
 
-  font-weight: 500;
+  font-weight: 380;
 
-  letter-spacing: -0.5px;
+  letter-spacing: -0.025em;
 }
+
 
 .register-header h2 em {
-  color: #8b5e3c;
+  color: var(--focus);
 
-  font-weight: 500;
+  font-weight: 380;
 }
+
 
 .register-header > p {
   max-width: 430px;
 
   margin: 17px 0 0;
 
-  color: #77736c;
+  color: var(--ink-2);
 
   font-size: 14px;
 
   line-height: 1.7;
 }
 
-/* Mobile brand */
+
+/* =========================================================
+   MOBILE BRAND
+   ========================================================= */
 
 .mobile-brand {
   display: none;
 
-  margin-bottom: 40px;
+  margin-bottom: 38px;
 
-  font-size: 16px;
+  color: var(--ink);
+
+  font-size: 17px;
 
   font-weight: 700;
 
   letter-spacing: 3px;
 }
 
+
 /* =========================================================
    FORM
    ========================================================= */
 
 .register-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 19px;
 }
+
 
 .register-form-group label {
   display: block;
 
   margin-bottom: 8px;
 
-  color: #3f3d38;
+  color: var(--ink);
 
-  font-size: 11px;
+  font-size: 12px;
 
   font-weight: 600;
 }
 
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
 .register-input-box {
-  height: 52px;
+  height: 54px;
 
   display: flex;
 
@@ -367,39 +507,45 @@
 
   gap: 12px;
 
-  padding: 0 15px;
+  padding: 0 16px;
 
-  background: #ffffff;
+  background: var(--paper);
 
-  border: 1px solid #dedbd3;
+  border: 1px solid var(--line);
 
-  border-radius: 4px;
+  border-radius: 12px;
 
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    transform 0.2s ease;
 }
+
 
 .register-input-box svg {
   flex-shrink: 0;
 
-  color: #9b968d;
+  color: var(--ink-3);
 
   transition: color 0.2s ease;
 }
 
+
 .register-input-box:focus-within {
   background: #fff;
 
-  border-color: #8b5e3c;
+  border-color: var(--focus);
 
-  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.08);
+  box-shadow:
+    0 0 0 4px rgba(47, 127, 184, 0.08);
 }
+
 
 .register-input-box:focus-within svg {
-  color: #8b5e3c;
+  color: var(--focus);
 }
+
 
 .register-input-box input {
   width: 100%;
@@ -412,26 +558,33 @@
 
   background: transparent;
 
-  color: #1e1e1c;
+  color: var(--ink);
 
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--sans);
 
-  font-size: 13px;
+  font-size: 14px;
 }
+
 
 .register-input-box input::placeholder {
-  color: #aaa69e;
+  color: #8996a1;
 }
+
+
+/* Autofill */
 
 .register-input-box input:-webkit-autofill,
 .register-input-box input:-webkit-autofill:hover,
 .register-input-box input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #1e1e1c;
+  -webkit-text-fill-color: var(--ink);
 
-  box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow:
+    0 0 0 1000px var(--paper) inset;
 
-  transition: background-color 5000s ease-in-out 0s;
+  transition:
+    background-color 5000s ease-in-out 0s;
 }
+
 
 /* =========================================================
    ERROR
@@ -440,20 +593,21 @@
 .register-error {
   margin: 8px 0 18px;
 
-  padding: 11px 13px;
+  padding: 12px 14px;
 
-  border: 1px solid #ead1ca;
+  border: 1px solid #e5c9c1;
 
-  background: #fff6f4;
+  background: #fff5f2;
 
-  color: #9b493b;
+  color: #984b3e;
 
-  border-radius: 4px;
+  border-radius: 10px;
 
   font-size: 12px;
 
   line-height: 1.5;
 }
+
 
 /* =========================================================
    SUBMIT BUTTON
@@ -462,9 +616,9 @@
 .register-submit-btn {
   width: 100%;
 
-  height: 52px;
+  height: 54px;
 
-  margin-top: 8px;
+  margin-top: 10px;
 
   display: flex;
 
@@ -474,45 +628,50 @@
 
   gap: 10px;
 
-  border: none;
+  border: 1px solid var(--ink);
 
-  border-radius: 4px;
+  border-radius: 12px;
 
-  background: #1e1e1c;
+  background: var(--ink);
 
-  color: #ffffff;
+  color: #fff;
 
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--sans);
 
-  font-size: 13px;
+  font-size: 14px;
 
   font-weight: 600;
 
   cursor: pointer;
 
   transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
 }
+
 
 .register-submit-btn:hover:not(:disabled) {
-  background: #33312d;
+  background: #1d3348;
 
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 14px 30px rgba(15, 31, 46, 0.18);
 }
+
 
 .register-submit-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
+
 .register-submit-btn:disabled {
   cursor: not-allowed;
 
-  opacity: 0.7;
+  opacity: 0.65;
 }
+
 
 /* =========================================================
    LOADING
@@ -522,7 +681,7 @@
   width: 16px;
   height: 16px;
 
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 
   border-top-color: #ffffff;
 
@@ -531,11 +690,13 @@
   animation: register-spin 0.7s linear infinite;
 }
 
+
 @keyframes register-spin {
   to {
     transform: rotate(360deg);
   }
 }
+
 
 /* =========================================================
    LOGIN
@@ -552,10 +713,11 @@
 
   gap: 5px;
 
-  color: #8a867e;
+  color: var(--ink-3);
 
   font-size: 12px;
 }
+
 
 .register-login a {
   display: inline-flex;
@@ -564,16 +726,24 @@
 
   gap: 5px;
 
-  color: #8b5e3c;
+  color: var(--focus);
 
   font-weight: 700;
 
   text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
+
 .register-login a:hover {
+  color: var(--ink);
+
   text-decoration: underline;
+
+  text-underline-offset: 4px;
 }
+
 
 /* =========================================================
    PRIVACY NOTE
@@ -586,7 +756,7 @@
 
   text-align: center;
 
-  color: #aaa69e;
+  color: #8996a1;
 
   font-size: 9px;
 
@@ -595,27 +765,29 @@
   letter-spacing: 0.2px;
 }
 
+
 /* =========================================================
    TABLET
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .register-page {
-    grid-template-columns: 0.85fr 1.15fr;
+    grid-template-columns: 0.9fr 1.1fr;
   }
 
   .register-story {
-    padding: 45px 7%;
+    padding: 45px 6%;
   }
 
   .register-form-section {
-    padding: 45px 7%;
+    padding: 45px 6%;
   }
 
   .story-content h1 {
-    font-size: 50px;
+    font-size: clamp(3rem, 5vw, 4.2rem);
   }
 }
+
 
 /* =========================================================
    MOBILE
@@ -623,9 +795,11 @@
 
 @media (max-width: 700px) {
   .register-page {
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 64px);
 
     display: block;
+
+    overflow: visible;
   }
 
   .register-story {
@@ -633,9 +807,17 @@
   }
 
   .register-form-section {
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 64px);
 
-    padding: 55px 7%;
+    padding: 48px 7%;
+
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        rgba(47, 127, 184, 0.06),
+        transparent 35%
+      ),
+      var(--paper);
   }
 
   .register-card {
@@ -651,9 +833,10 @@
   }
 
   .register-header h2 {
-    font-size: 40px;
+    font-size: 2.7rem;
   }
 }
+
 
 /* =========================================================
    SMALL MOBILE
@@ -661,15 +844,219 @@
 
 @media (max-width: 420px) {
   .register-form-section {
-    padding: 40px 6%;
+    padding: 38px 6%;
   }
 
   .mobile-brand {
-    margin-bottom: 35px;
+    margin-bottom: 32px;
+
+    font-size: 16px;
   }
 
   .register-header h2 {
-    font-size: 35px;
+    font-size: 2.35rem;
+  }
+
+  .register-header > p {
+    font-size: 13px;
+  }
+
+  .register-input-box {
+    height: 52px;
+
+    border-radius: 10px;
+  }
+
+  .register-submit-btn {
+    height: 52px;
+
+    border-radius: 10px;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .register-page *,
+  .register-page *::before,
+  .register-page *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+/* =========================================================
+   SINGLE-SCREEN REGISTER PAGE
+   ========================================================= */
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+.register-page {
+  height: calc(100vh - 72px);
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+.register-story {
+  height: calc(100vh - 72px);
+  min-height: 0;
+
+  padding: 32px clamp(32px, 5vw, 72px);
+}
+
+.register-form-section {
+  height: calc(100vh - 72px);
+  min-height: 0;
+
+  padding: 32px clamp(28px, 5vw, 72px);
+
+  overflow: hidden;
+}
+
+.story-content {
+  padding: 30px 0;
+}
+
+.story-content h1 {
+  font-size: clamp(2.8rem, 4.5vw, 4.5rem);
+}
+
+.story-content > p {
+  margin: 20px 0 25px;
+}
+
+.story-line-decoration {
+  margin-bottom: 25px;
+}
+
+.register-header {
+  margin-bottom: 24px;
+}
+
+.register-form-group {
+  margin-bottom: 14px;
+}
+
+.register-input-box {
+  height: 48px;
+}
+
+.register-submit-btn {
+  height: 48px;
+  margin-top: 6px;
+}
+
+.register-login {
+  margin-top: 16px;
+}
+
+.register-privacy {
+  margin-top: 15px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) and (min-width: 701px) {
+  .register-page {
+    grid-template-columns: 0.85fr 1.15fr;
+  }
+
+  .register-story {
+    padding: 28px 5%;
+  }
+
+  .register-form-section {
+    padding: 28px 5%;
+  }
+
+  .story-content {
+    padding: 20px 0;
+  }
+
+  .story-content h1 {
+    font-size: clamp(2.5rem, 4vw, 3.6rem);
+  }
+
+  .story-content > p {
+    font-size: 14px;
+    margin: 18px 0 22px;
+  }
+
+  .register-header h2 {
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .register-page {
+    height: auto;
+    min-height: calc(100vh - 64px);
+
+    overflow: visible;
+  }
+
+  .register-form-section {
+    height: auto;
+    min-height: calc(100vh - 64px);
+
+    overflow: visible;
+
+    padding: 40px 7% 50px;
+  }
+
+  .register-card {
+    max-width: 500px;
+  }
+
+  .register-header h2 {
+    font-size: 2.6rem;
+  }
+
+  .register-form-group {
+    margin-bottom: 16px;
+  }
+
+  .register-input-box {
+    height: 52px;
+  }
+
+  .register-submit-btn {
+    height: 52px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .register-form-section {
+    padding: 32px 6% 40px;
+  }
+
+  .register-header {
+    margin-bottom: 24px;
+  }
+
+  .register-header h2 {
+    font-size: 2.25rem;
   }
 
   .register-header > p {
