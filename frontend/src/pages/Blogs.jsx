@@ -5,6 +5,7 @@ import {
   BookOpen,
   Clock,
   Heart,
+  LockKeyhole,
   MessageCircle,
   PenLine,
   RotateCw,
@@ -94,7 +95,16 @@ function getMedia(post) {
    MOMENT ENTRY
    ========================================================= */
 
-function MomentEntry({ post, isLiked, isFresh, isPending, onLike, onTag }) {
+function MomentEntry({
+  post,
+  isLiked,
+  isFresh,
+  isPending,
+  onLike,
+  onTag,
+  locked = false,
+  showLoginPrompt = false,
+}) {
   const media = getMedia(post);
   const date = getDateParts(post.createdAt);
   const author = post.author?.username || "Anonymous";
@@ -104,7 +114,10 @@ function MomentEntry({ post, isLiked, isFresh, isPending, onLike, onTag }) {
   const comments = getCommentsCount(post);
 
   return (
-    <article className="moment">
+    <article
+      className={`moment ${locked ? "moment-locked" : ""}`}
+      aria-label={locked ? "Sign in to read this moment" : undefined}
+    >
       <div className="moment-date">
         {date && (
           <time dateTime={date.iso}>
@@ -228,6 +241,45 @@ function MomentEntry({ post, isLiked, isFresh, isPending, onLike, onTag }) {
           </Link>
         </footer>
       </div>
+
+      {locked && (
+        <div className="moment-lock-overlay">
+          <div className="moment-lock-card">
+            <div className="moment-lock-icon">
+              <LockKeyhole size={20} aria-hidden="true" />
+            </div>
+
+            <span className="moment-lock-eyebrow">
+              More moments await
+            </span>
+
+            <h4>
+              {showLoginPrompt
+                ? "There is more to remember."
+                : "Sign in to read this moment."}
+            </h4>
+
+            <p>
+              {showLoginPrompt
+                ? "Sign in to explore the rest of Memoire and discover more stories from the community."
+                : "Create an account or sign in to continue exploring Memoire."}
+            </p>
+
+            {showLoginPrompt && (
+              <div className="moment-lock-actions">
+                <Link to="/login" className="moment-lock-signin">
+                  Sign in
+                </Link>
+
+                <Link to="/register" className="moment-lock-join">
+                  Start Writing
+                  <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </article>
   );
 }
@@ -279,6 +331,10 @@ function Blogs() {
 
   const [notice, setNotice] = useState("");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token")),
+  );
+
   const searchRef = useRef(null);
   const feedTopRef = useRef(null);
   const noticeTimer = useRef(null);
@@ -294,6 +350,26 @@ function Blogs() {
   };
 
   useEffect(() => () => clearTimeout(noticeTimer.current), []);
+
+  /* -------------------------------------------------------
+     AUTH STATE
+     ------------------------------------------------------- */
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsLoggedIn(Boolean(localStorage.getItem("token")));
+    };
+
+    checkAuth();
+
+    window.addEventListener("auth-change", checkAuth);
+    window.addEventListener("storage", checkAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", checkAuth);
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, []);
 
   /* -------------------------------------------------------
      FETCH MOMENTS
@@ -463,6 +539,21 @@ function Blogs() {
   const visiblePosts = useMemo(
     () => filteredPosts.slice(0, visibleCount),
     [filteredPosts, visibleCount],
+  );
+
+  // The first three posts from the original feed stay readable.
+  // Everything after those three is locked for logged-out users.
+  const lockedPostIds = useMemo(
+    () => new Set(posts.slice(3).map((post) => post._id)),
+    [posts],
+  );
+
+  const firstVisibleLockedPostId = useMemo(
+    () =>
+      visiblePosts.find((post) =>
+        lockedPostIds.has(post._id),
+      )?._id || null,
+    [visiblePosts, lockedPostIds],
   );
 
   // Month markers only make sense when the feed is in date order
@@ -796,6 +887,15 @@ function Blogs() {
                         isPending={likeLoading === item.post._id}
                         onLike={handleLike}
                         onTag={handleTagSelect}
+                        locked={
+                          !isLoggedIn &&
+                          lockedPostIds.has(item.post._id)
+                        }
+                        showLoginPrompt={
+                          !isLoggedIn &&
+                          lockedPostIds.has(item.post._id) &&
+                          firstVisibleLockedPostId === item.post._id
+                        }
                       />
                     ),
                   )}

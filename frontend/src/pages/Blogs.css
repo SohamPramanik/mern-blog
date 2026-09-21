@@ -1768,3 +1768,175 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   LOGGED-OUT CONTENT LOCK
+   First three moments remain readable. Later moments are
+   intentionally blurred until the user signs in.
+   ========================================================= */
+
+.moment-locked {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.moment-locked .moment-main {
+  filter: blur(8px);
+  user-select: none;
+  pointer-events: none;
+  transform: scale(1.012);
+}
+
+.moment-locked .moment-date {
+  filter: blur(6px);
+  user-select: none;
+}
+
+.moment-locked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 249, 246, 0.18),
+    rgba(250, 249, 246, 0.48)
+  );
+  pointer-events: none;
+}
+
+.moment-lock-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  pointer-events: auto;
+}
+
+.moment-lock-card {
+  width: min(420px, 100%);
+  padding: 28px 30px;
+  border: 1px solid rgba(207, 199, 187, 0.9);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, 0.96);
+  box-shadow: 0 20px 55px rgba(45, 37, 28, 0.13);
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.moment-lock-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8cec0;
+  border-radius: 50%;
+  background: var(--umber-wash);
+  color: var(--umber);
+}
+
+.moment-lock-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--umber);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.moment-lock-card h4 {
+  margin: 0 0 9px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.moment-lock-card p {
+  max-width: 360px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.moment-lock-actions {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.moment-lock-signin,
+.moment-lock-join {
+  min-height: 40px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.moment-lock-signin {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper) !important;
+}
+
+.moment-lock-signin:hover {
+  border-color: var(--umber-deep);
+  background: var(--umber-deep);
+}
+
+.moment-lock-join {
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--ink) !important;
+}
+
+.moment-lock-join:hover {
+  border-color: var(--umber);
+  background: var(--umber-wash);
+  color: var(--umber-deep) !important;
+}
+
+@media (max-width: 680px) {
+  .moment-lock-overlay {
+    padding: 18px;
+  }
+
+  .moment-lock-card {
+    padding: 23px 20px;
+  }
+
+  .moment-lock-card h4 {
+    font-size: 21px;
+  }
+
+  .moment-lock-actions {
+    flex-direction: column;
+  }
+
+  .moment-lock-signin,
+  .moment-lock-join {
+    width: 100%;
+  }
+}
