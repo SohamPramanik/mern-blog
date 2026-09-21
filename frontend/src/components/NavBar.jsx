@@ -49,13 +49,21 @@ function NavBar() {
     <header className="navbar">
       <div className="navbar-container">
         {/* BRAND */}
-        <Link to="/" className="navbar-brand">
-          <span className="brand-name">MEMOIRE</span>
-
-          <span className="brand-tagline">
-            Your story, one moment at a time.
-          </span>
-        </Link>
+        {isLoggedIn ? (
+          <div className="navbar-brand">
+            <span className="brand-name">MEMOIRE</span>
+            <span className="brand-tagline">
+              Your story, one moment at a time.
+            </span>
+          </div>
+        ) : (
+          <Link to="/" className="navbar-brand">
+            <span className="brand-name">MEMOIRE</span>
+            <span className="brand-tagline">
+              Your story, one moment at a time.
+            </span>
+          </Link>
+        )}
 
         {/* NAVIGATION */}
         <nav className="nav-links">
