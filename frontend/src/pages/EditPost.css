@@ -1,17 +1,38 @@
 /* =========================================================
+   MEMOIRE COOL THEME COMPATIBILITY
+   ========================================================= */
+
+.edit-page {
+  --paper: #f4f5f1;
+  --paper-light: #fbfcfa;
+  --surface: #ffffff;
+  --ink: #0f1f2e;
+  --ink-soft: #3e4f60;
+  --muted: #5d6d7c;
+  --muted-2: #8796a3;
+  --focus: #2f7fb8;
+  --blue-deep: #1d557e;
+  --blue-wash: #e9f2f8;
+  --line: #d9ded9;
+  --line-strong: #c5ccc8;
+  --text-muted: #5d6d7c;
+  --accent: #2f7fb8;
+}
+
+/* =========================================================
    MEMOIRE — EDIT MOMENT
    Editorial / Literary Theme
    ========================================================= */
 
 .edit-page {
-  --edit-bg: #faf9f6;
+  --edit-bg: #f4f5f1;
   --edit-surface: #ffffff;
-  --edit-surface-soft: #f3f1eb;
-  --edit-text: #1e1e1c;
-  --edit-text-soft: #6e6c66;
-  --edit-border: #e5e2da;
-  --edit-accent: #8b5e3c;
-  --edit-accent-dark: #68452c;
+  --edit-surface-soft: #e9ece8;
+  --edit-text: #0f1f2e;
+  --edit-text-soft: #5d6d7c;
+  --edit-border: #d9ded9;
+  --edit-accent: #2f7fb8;
+  --edit-accent-dark: #1d557e;
 
   min-height: 100vh;
 
@@ -20,7 +41,13 @@
   background: var(--edit-bg);
   color: var(--edit-text);
 
-  font-family: "DM Sans", sans-serif;
+  font-family:
+    "Instrument Sans",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
 }
 
 /* =========================================================
@@ -125,7 +152,7 @@
 
   padding: 55px 60px;
 
-  box-shadow: 0 15px 40px rgba(40, 35, 25, 0.045);
+  box-shadow: 0 15px 40px rgba(15, 31, 46, 0.055);
 }
 
 /* =========================================================
@@ -156,7 +183,8 @@
 .edit-header h1 {
   margin: 0;
 
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: clamp(38px, 4vw, 55px);
 
@@ -245,7 +273,7 @@
 .edit-label-row > span {
   font-size: 9px;
 
-  color: #aaa69e;
+  color: #8796a3;
 }
 
 /* =========================================================
@@ -291,7 +319,7 @@
 
 .edit-input-group input::placeholder,
 .edit-input-group textarea::placeholder {
-  color: #aaa69e;
+  color: #8796a3;
 }
 
 .edit-input-group input:focus,
@@ -306,7 +334,8 @@
    ========================================================= */
 
 .edit-input-group:first-of-type input {
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: 21px;
 
@@ -366,7 +395,7 @@
 
   letter-spacing: 2px;
 
-  color: #aaa69e;
+  color: #8796a3;
 }
 
 /* =========================================================
@@ -376,7 +405,7 @@
 .edit-upload-box {
   min-height: 190px;
 
-  border: 1px dashed #d4cfc5;
+  border: 1px dashed #c5ccc8;
 
   display: flex;
 
@@ -399,7 +428,7 @@
 .edit-upload-box:hover {
   border-color: var(--edit-accent);
 
-  background: #f7f2ec;
+  background: #f1f5f3;
 }
 
 .edit-upload-icon {
@@ -414,13 +443,14 @@
 
   color: var(--edit-accent);
 
-  border: 1px solid #eadfd4;
+  border: 1px solid #d7e5ed;
 
-  background: #f7f2ec;
+  background: #f1f5f3;
 }
 
 .edit-upload-box strong {
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: 17px;
 
@@ -440,7 +470,7 @@
 
   font-size: 9px;
 
-  color: #99958c;
+  color: #7b8995;
 }
 
 /* =========================================================
@@ -460,7 +490,7 @@
 
   overflow: hidden;
 
-  background: #242320;
+  background: #102333;
 }
 
 .edit-preview-media {
@@ -472,7 +502,7 @@
 
   object-fit: contain;
 
-  background: #242320;
+  background: #102333;
 }
 
 .edit-media-type {
@@ -489,7 +519,7 @@
 
   padding: 6px 9px;
 
-  background: rgba(36, 35, 32, 0.85);
+  background: rgba(15, 31, 46, 0.88);
 
   color: white;
 
@@ -551,11 +581,11 @@
 }
 
 .edit-remove-btn {
-  color: #9b4a3d;
+  color: #a85c68;
 }
 
 .edit-remove-btn:hover {
-  color: #78352c;
+  color: #7f3f4a;
 }
 
 /* =========================================================
@@ -640,7 +670,7 @@
 }
 
 .edit-cancel-btn:hover {
-  border-color: #cfcac0;
+  border-color: #c5ccc8;
 
   color: var(--edit-text);
 
@@ -712,7 +742,8 @@
 .edit-editorial-note h2 {
   margin: 0;
 
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: 30px;
 
@@ -798,11 +829,12 @@
 
   letter-spacing: 1.5px;
 
-  color: #99958c;
+  color: #7b8995;
 }
 
 .edit-mini-timeline-item strong {
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: 15px;
 
@@ -877,7 +909,8 @@
 .edit-error-card h1 {
   margin: 15px 0 0;
 
-  font-family: "Playfair Display", serif;
+  font-family:
+    "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
   font-size: 35px;
 
