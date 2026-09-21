@@ -361,3 +361,332 @@
     font-size: 30px;
   }
 }
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+.post-comments {
+  margin-top: 64px;
+  padding-top: 42px;
+  border-top: 1px solid #e8e2d9;
+  scroll-margin-top: 100px;
+}
+
+.post-comments-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  color: #8a8176;
+}
+
+.post-comments-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #a09588;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.post-comments-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: #2f2b27;
+  font-family: "Fraunces", serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.post-comments-header h2 span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 20px;
+  background: #f1ede6;
+  color: #81786d;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   COMMENT FORM
+========================================================= */
+
+.post-comment-form {
+  padding: 18px;
+  border: 1px solid #e5ded4;
+  border-radius: 16px;
+  background: #faf8f4;
+  transition: border-color 0.2s ease;
+}
+
+.post-comment-form:focus-within {
+  border-color: #cfc5b8;
+}
+
+.post-comment-form textarea {
+  width: 100%;
+  min-height: 105px;
+  resize: vertical;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #332f2a;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.post-comment-form textarea::placeholder {
+  color: #a8a096;
+}
+
+.post-comment-form-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #e8e2da;
+}
+
+.post-comment-form-bottom span {
+  color: #a29a91;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.post-comment-form-bottom button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 17px;
+  border: none;
+  border-radius: 9px;
+  background: #332f2a;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.post-comment-form-bottom button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.post-comment-form-bottom button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* =========================================================
+   LOGIN MESSAGE
+========================================================= */
+
+.post-comments-login {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid #e5ded4;
+  border-radius: 14px;
+  background: #faf8f4;
+  color: #777067;
+  font-size: 13px;
+}
+
+.post-comments-login a {
+  margin-left: auto;
+  color: #332f2a;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.post-comment-error {
+  margin-top: 10px;
+  padding: 10px 13px;
+  border-radius: 9px;
+  background: #fff3f1;
+  color: #a04b42;
+  font-size: 12px;
+}
+
+/* =========================================================
+   COMMENTS LIST
+========================================================= */
+
+.post-comments-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+}
+
+.post-comment {
+  display: flex;
+  gap: 14px;
+  padding: 22px 0;
+  border-bottom: 1px solid #eee9e2;
+}
+
+.post-comment:first-child {
+  padding-top: 4px;
+}
+
+.post-comment-avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #eee9e1;
+  color: #81786e;
+}
+
+.post-comment-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-comment-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.post-comment-top strong {
+  color: #35312c;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.post-comment-top span {
+  color: #a49c93;
+  font-size: 11px;
+}
+
+.post-comment-body p {
+  margin: 0;
+  color: #5e5750;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.post-comment-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 9px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #a49a91;
+  cursor: pointer;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 11px;
+}
+
+.post-comment-delete:hover {
+  color: #9b4b43;
+}
+
+.post-comment-delete:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* =========================================================
+   EMPTY COMMENTS
+========================================================= */
+
+.post-comments-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 55px 20px;
+  text-align: center;
+  color: #a29a91;
+}
+
+.post-comments-empty svg {
+  margin-bottom: 12px;
+}
+
+.post-comments-empty h3 {
+  margin: 0 0 5px;
+  color: #575049;
+  font-family: "Fraunces", serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.post-comments-empty p {
+  max-width: 340px;
+  margin: 0;
+  color: #a29a91;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  .post-comments {
+    margin-top: 45px;
+    padding-top: 30px;
+  }
+
+  .post-comments-header h2 {
+    font-size: 25px;
+  }
+
+  .post-comment-form-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .post-comment-form-bottom button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .post-comments-login {
+    flex-wrap: wrap;
+  }
+
+  .post-comments-login a {
+    margin-left: 0;
+  }
+}

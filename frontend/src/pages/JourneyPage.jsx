@@ -226,13 +226,23 @@ function JourneyDetails() {
                     <div className="journey-day-footer">
                       <span>{moment.author?.username || ""}</span>
 
-                      <Link
-                        to={`/post/${moment._id}`}
-                        className="journey-day-read"
-                      >
-                        Read More
-                        <ArrowRight size={14} />
-                      </Link>
+                      <div className="journey-day-actions">
+                        <Link
+                          to={`/edit/${moment._id}`}
+                          className="journey-day-edit"
+                        >
+                          <PenLine size={13} />
+                          Edit
+                        </Link>
+
+                        <Link
+                          to={`/post/${moment._id}`}
+                          className="journey-day-read"
+                        >
+                          Read More
+                          <ArrowRight size={14} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>

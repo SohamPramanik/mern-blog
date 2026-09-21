@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   ArrowRight,
   BookOpen,
   CalendarDays,
@@ -51,9 +50,9 @@ function CreatePost() {
 
   const [errorMsg, setErrorMsg] = useState("");
 
-  // =========================================================
-  // LOAD USER JOURNEYS
-  // =========================================================
+  /* =========================================================
+     LOAD USER JOURNEYS
+     ========================================================= */
 
   useEffect(() => {
     const fetchJourneys = async () => {
@@ -79,9 +78,9 @@ function CreatePost() {
     fetchJourneys();
   }, []);
 
-  // =========================================================
-  // CLEAN MEDIA PREVIEW
-  // =========================================================
+  /* =========================================================
+     CLEAN MEDIA PREVIEW
+     ========================================================= */
 
   useEffect(() => {
     return () => {
@@ -91,9 +90,9 @@ function CreatePost() {
     };
   }, [mediaPreview]);
 
-  // =========================================================
-  // MODE
-  // =========================================================
+  /* =========================================================
+     MODE
+     ========================================================= */
 
   const handleModeChange = (newMode) => {
     setMode(newMode);
@@ -108,9 +107,9 @@ function CreatePost() {
     }
   };
 
-  // =========================================================
-  // MEDIA VALIDATION
-  // =========================================================
+  /* =========================================================
+     MEDIA
+     ========================================================= */
 
   const handleMedia = (file) => {
     if (!file) return;
@@ -126,7 +125,9 @@ function CreatePost() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      setErrorMsg("Only JPG, PNG, WEBP, GIF, MP4 and WEBM files are allowed.");
+      setErrorMsg(
+        "Only JPG, PNG, WEBP, GIF, MP4 and WEBM files are allowed."
+      );
       return;
     }
 
@@ -147,10 +148,6 @@ function CreatePost() {
     setMediaPreview(previewUrl);
   };
 
-  // =========================================================
-  // FILE INPUT
-  // =========================================================
-
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
 
@@ -160,10 +157,6 @@ function CreatePost() {
 
     e.target.value = "";
   };
-
-  // =========================================================
-  // DRAG & DROP
-  // =========================================================
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -187,10 +180,6 @@ function CreatePost() {
     }
   };
 
-  // =========================================================
-  // REMOVE MEDIA
-  // =========================================================
-
   const removeMedia = () => {
     if (mediaPreview) {
       URL.revokeObjectURL(mediaPreview);
@@ -200,9 +189,9 @@ function CreatePost() {
     setMediaPreview("");
   };
 
-  // =========================================================
-  // PRIVACY
-  // =========================================================
+  /* =========================================================
+     PRIVACY
+     ========================================================= */
 
   const getPrivacyIcon = () => {
     if (privacy === "public") {
@@ -217,20 +206,15 @@ function CreatePost() {
   };
 
   const getPrivacyLabel = () => {
-    if (privacy === "public") {
-      return "Everyone";
-    }
-
-    if (privacy === "followers") {
-      return "Followers";
-    }
+    if (privacy === "public") return "Everyone";
+    if (privacy === "followers") return "Followers";
 
     return "Only me";
   };
 
-  // =========================================================
-  // SUBMIT
-  // =========================================================
+  /* =========================================================
+     SUBMIT
+     ========================================================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -263,34 +247,22 @@ function CreatePost() {
       const formData = new FormData();
 
       formData.append("title", title.trim());
-
       formData.append("content", content.trim());
-
       formData.append("privacy", privacy);
-
-      // Existing journey
 
       if (mode === "existing") {
         formData.append("journeyId", selectedJourney);
-
         formData.append("isStandalone", "false");
       }
-
-      // New journey
 
       if (mode === "new") {
         formData.append("newJourneyName", newJourneyName.trim());
-
         formData.append("isStandalone", "false");
       }
-
-      // Standalone moment
 
       if (mode === "standalone") {
         formData.append("isStandalone", "true");
       }
-
-      // Media
 
       if (mediaFile) {
         formData.append("media", mediaFile);
@@ -306,16 +278,12 @@ function CreatePost() {
 
       setErrorMsg(
         error?.response?.data?.message ||
-          "Something went wrong while saving your moment.",
+          "Something went wrong while saving your moment."
       );
     } finally {
       setSaving(false);
     }
   };
-
-  // =========================================================
-  // DATE
-  // =========================================================
 
   const formattedDate = new Date().toLocaleDateString("en-US", {
     day: "numeric",
@@ -327,60 +295,59 @@ function CreatePost() {
 
   return (
     <main className="create-page">
-      {/* =====================================================
-          TOP BAR
-          ===================================================== */}
 
-      <header className="create-topbar">
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeft size={17} />
-          Back
-        </button>
-
-        <div className="create-brand">
-          <span>MEMOIRE</span>
-
-          <small>WRITE A MOMENT</small>
-        </div>
-
-        <div className="topbar-status">
-          <span className="status-dot"></span>
-          Draft
-        </div>
-      </header>
+      {/* Ambient decoration */}
+      <div className="ambient ambient-one" />
+      <div className="ambient ambient-two" />
+      <div className="ambient ambient-three" />
 
       {/* =====================================================
           MAIN
           ===================================================== */}
 
       <section className="create-layout">
+
         {/* ===================================================
             WRITING AREA
             =================================================== */}
 
-        <form className="writing-section" onSubmit={handleSubmit}>
+        <form
+          className="writing-section"
+          onSubmit={handleSubmit}
+        >
+
           <div className="writing-intro">
+
+            <div className="intro-decoration">
+              <span />
+              <span />
+              <span />
+            </div>
+
             <span className="writing-eyebrow">
-              <PenLine size={14} />A NEW MOMENT
+              <PenLine size={14} />
+              A NEW MOMENT
             </span>
 
-            <h1>What happened?</h1>
+            <h1>
+              What happened<span>?</span>
+            </h1>
 
             <p>
-              Write it the way you remember it. There is no perfect way to tell
-              a story.
+              Write it the way you remember it.
+              There is no perfect way to tell a story.
             </p>
+
           </div>
 
-          {/* =================================================
-              TITLE
-              ================================================= */}
+          {/* TITLE */}
 
           <div className="title-area">
+
+            <div className="field-label">
+              MOMENT TITLE
+            </div>
+
             <input
               type="text"
               value={title}
@@ -391,14 +358,20 @@ function CreatePost() {
               required
             />
 
-            <div className="title-count">{title.length}/150</div>
+            <div className="title-count">
+              {title.length}/150
+            </div>
+
           </div>
 
-          {/* =================================================
-              CONTENT
-              ================================================= */}
+          {/* CONTENT */}
 
           <div className="content-area">
+
+            <div className="field-label">
+              YOUR STORY
+            </div>
+
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -410,45 +383,70 @@ function CreatePost() {
             />
 
             <div className="content-footer">
-              <span>{content.length.toLocaleString()} characters</span>
+              <span>
+                {content.length.toLocaleString()} characters
+              </span>
 
-              <span>Your words stay yours.</span>
+              <span className="private-note">
+                <Lock size={11} />
+                Your words stay yours.
+              </span>
             </div>
+
           </div>
 
-          {/* =================================================
-              MEDIA UPLOAD
-              ================================================= */}
+          {/* MEDIA */}
 
           <div className="media-section">
+
             <div className="media-heading">
+
               <div>
+                <span className="section-kicker">
+                  OPTIONAL
+                </span>
+
                 <h3>Add to the memory</h3>
 
-                <p>Attach a photo or video if you want.</p>
+                <p>
+                  A photo or video can make the moment feel alive again.
+                </p>
               </div>
 
-              <span>OPTIONAL</span>
             </div>
 
             {!mediaFile ? (
+
               <div
-                className={`media-dropzone ${dragActive ? "drag-active" : ""}`}
+                className={`media-dropzone ${
+                  dragActive ? "drag-active" : ""
+                }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
               >
+
                 <div className="upload-icon">
                   <ImagePlus size={23} />
                 </div>
 
                 <div className="upload-text">
-                  <strong>Add a photo or video</strong>
 
-                  <span>Drag & drop here or click to browse</span>
+                  <strong>
+                    Add a photo or video
+                  </strong>
 
-                  <small>JPG, PNG, WEBP, GIF, MP4 or WEBM · Max 20 MB</small>
+                  <span>
+                    Drag & drop here or click to browse
+                  </span>
+
+                  <small>
+                    JPG · PNG · WEBP · GIF · MP4 · WEBM
+                    <br />
+                    Maximum 20 MB
+                  </small>
+
                 </div>
 
                 <div className="upload-button">
@@ -463,20 +461,37 @@ function CreatePost() {
                   onChange={handleFileChange}
                   hidden
                 />
+
               </div>
+
             ) : (
+
               <div className="media-preview">
+
                 {isVideo ? (
-                  <video src={mediaPreview} controls />
+                  <video
+                    src={mediaPreview}
+                    controls
+                  />
                 ) : (
-                  <img src={mediaPreview} alt="Moment preview" />
+                  <img
+                    src={mediaPreview}
+                    alt="Moment preview"
+                  />
                 )}
 
                 <div className="media-overlay">
-                  <div className="media-file-info">
-                    {isVideo ? <Play size={15} /> : <FileImage size={15} />}
 
-                    <span>{mediaFile.name}</span>
+                  <div className="media-file-info">
+                    {isVideo ? (
+                      <Play size={15} />
+                    ) : (
+                      <FileImage size={15} />
+                    )}
+
+                    <span>
+                      {mediaFile.name}
+                    </span>
                   </div>
 
                   <button
@@ -487,41 +502,45 @@ function CreatePost() {
                   >
                     <X size={17} />
                   </button>
+
                 </div>
+
               </div>
             )}
+
           </div>
 
-          {/* =================================================
-              ERROR
-              ================================================= */}
+          {/* ERROR */}
 
           {errorMsg && (
             <div className="create-error">
               <X size={17} />
-
               <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* =================================================
-              ACTION
-              ================================================= */}
+          {/* ACTION */}
 
           <div className="writing-actions">
+
             <div className="writing-ai-note">
               <Sparkles size={15} />
 
               <span>
-                Memoire may understand the emotions and themes inside this
-                moment — your words will never be rewritten.
+                Memoire may understand the emotions and themes
+                inside this moment — your words will never be rewritten.
               </span>
             </div>
 
-            <button type="submit" className="publish-button" disabled={saving}>
+            <button
+              type="submit"
+              className="publish-button"
+              disabled={saving}
+            >
+
               {saving ? (
                 <>
-                  <span className="button-spinner"></span>
+                  <span className="button-spinner" />
                   Saving...
                 </>
               ) : (
@@ -530,8 +549,11 @@ function CreatePost() {
                   <ArrowRight size={17} />
                 </>
               )}
+
             </button>
+
           </div>
+
         </form>
 
         {/* ===================================================
@@ -539,317 +561,450 @@ function CreatePost() {
             =================================================== */}
 
         <aside className="story-settings">
-          {/* =================================================
-              JOURNEY
-              ================================================= */}
 
-          <div className="settings-block">
-            <div className="settings-heading">
-              <div className="settings-heading-icon">
-                <BookOpen size={17} />
-              </div>
+          <div className="settings-panel">
 
-              <div>
-                <h3>Where does this belong?</h3>
+            <div className="panel-top-line" />
 
-                <p>Connect this moment to your story.</p>
-              </div>
-            </div>
+            {/* JOURNEY */}
 
-            <div className="journey-options">
-              {/* Existing */}
+            <div className="settings-block">
 
-              <button
-                type="button"
-                className={`journey-option ${
-                  mode === "existing" ? "selected" : ""
-                }`}
-                onClick={() => handleModeChange("existing")}
-              >
-                <div className="option-radio">
-                  {mode === "existing" && <Check size={13} />}
+              <div className="settings-heading">
+
+                <div className="settings-heading-icon">
+                  <BookOpen size={17} />
                 </div>
 
-                <div className="option-content">
-                  <strong>Continue a Journey</strong>
-
-                  <span>
-                    Add this moment to something you're already writing.
+                <div>
+                  <span className="panel-kicker">
+                    ORGANIZE
                   </span>
-                </div>
-              </button>
 
-              {/* New */}
+                  <h3>Where does this belong?</h3>
 
-              <button
-                type="button"
-                className={`journey-option ${mode === "new" ? "selected" : ""}`}
-                onClick={() => handleModeChange("new")}
-              >
-                <div className="option-radio">
-                  {mode === "new" && <Check size={13} />}
+                  <p>
+                    Connect this moment to your story.
+                  </p>
                 </div>
 
-                <div className="option-content">
-                  <strong>Start a New Journey</strong>
+              </div>
 
-                  <span>Give a new chapter of your life a beginning.</span>
-                </div>
-              </button>
+              <div className="journey-options">
 
-              {/* Standalone */}
+                {/* Existing */}
 
-              <button
-                type="button"
-                className={`journey-option ${
-                  mode === "standalone" ? "selected" : ""
-                }`}
-                onClick={() => handleModeChange("standalone")}
-              >
-                <div className="option-radio">
-                  {mode === "standalone" && <Check size={13} />}
-                </div>
+                <button
+                  type="button"
+                  className={`journey-option ${
+                    mode === "existing" ? "selected" : ""
+                  }`}
+                  onClick={() => handleModeChange("existing")}
+                >
 
-                <div className="option-content">
-                  <strong>Standalone Moment</strong>
-
-                  <span>Keep this moment on its own.</span>
-                </div>
-              </button>
-            </div>
-
-            {/* =================================================
-                EXISTING JOURNEYS
-                ================================================= */}
-
-            {mode === "existing" && (
-              <div className="journey-select-area">
-                <label>Choose a journey</label>
-
-                {loadingJourneys ? (
-                  <div className="journey-loading">
-                    Loading your journeys...
+                  <div className="option-radio">
+                    {mode === "existing" && (
+                      <Check size={12} />
+                    )}
                   </div>
-                ) : journeys.length > 0 ? (
-                  <div className="select-wrapper">
-                    <BookOpen size={16} />
 
-                    <select
-                      value={selectedJourney}
-                      onChange={(e) => setSelectedJourney(e.target.value)}
-                    >
-                      {journeys.map((journey) => (
-                        <option
-                          key={journey._id || journey.id}
-                          value={journey._id || journey.id}
-                        >
-                          {journey.title || journey.name || "Untitled Journey"}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="option-content">
+                    <strong>Continue a Journey</strong>
 
-                    <ChevronDown size={15} />
+                    <span>
+                      Add this moment to something you're already writing.
+                    </span>
                   </div>
-                ) : (
-                  <div className="no-journeys">
-                    <BookOpen size={18} />
 
-                    <div>
-                      <strong>No journeys yet</strong>
+                  {mode === "existing" && (
+                    <span className="option-number">01</span>
+                  )}
 
-                      <span>Start your first one below.</span>
-                    </div>
+                </button>
+
+                {/* New */}
+
+                <button
+                  type="button"
+                  className={`journey-option ${
+                    mode === "new" ? "selected" : ""
+                  }`}
+                  onClick={() => handleModeChange("new")}
+                >
+
+                  <div className="option-radio">
+                    {mode === "new" && (
+                      <Check size={12} />
+                    )}
                   </div>
-                )}
-              </div>
-            )}
 
-            {/* =================================================
-                NEW JOURNEY
-                ================================================= */}
+                  <div className="option-content">
+                    <strong>Start a New Journey</strong>
 
-            {mode === "new" && (
-              <div className="new-journey-area">
-                <label htmlFor="journey-name">Journey name</label>
+                    <span>
+                      Give a new chapter of your life a beginning.
+                    </span>
+                  </div>
 
-                <div className="new-journey-input">
-                  <Plus size={16} />
+                  {mode === "new" && (
+                    <span className="option-number">02</span>
+                  )}
 
-                  <input
-                    id="journey-name"
-                    type="text"
-                    placeholder="e.g. My College Journey"
-                    value={newJourneyName}
-                    onChange={(e) => setNewJourneyName(e.target.value)}
-                    maxLength={80}
-                  />
-                </div>
+                </button>
 
-                <small>You can add more moments to this journey later.</small>
-              </div>
-            )}
-          </div>
+                {/* Standalone */}
 
-          <div className="settings-divider"></div>
+                <button
+                  type="button"
+                  className={`journey-option ${
+                    mode === "standalone" ? "selected" : ""
+                  }`}
+                  onClick={() => handleModeChange("standalone")}
+                >
 
-          {/* =================================================
-              DATE
-              ================================================= */}
+                  <div className="option-radio">
+                    {mode === "standalone" && (
+                      <Check size={12} />
+                    )}
+                  </div>
 
-          <div className="settings-block">
-            <div className="settings-heading">
-              <div className="settings-heading-icon">
-                <CalendarDays size={17} />
-              </div>
+                  <div className="option-content">
+                    <strong>Standalone Moment</strong>
 
-              <div>
-                <h3>Moment details</h3>
+                    <span>
+                      Keep this moment on its own.
+                    </span>
+                  </div>
 
-                <p>A little context for your memory.</p>
-              </div>
-            </div>
+                  {mode === "standalone" && (
+                    <span className="option-number">03</span>
+                  )}
 
-            <div className="date-display">
-              <div className="date-icon">
-                <CalendarDays size={17} />
+                </button>
+
               </div>
 
-              <div>
-                <span>Published date</span>
+              {/* Existing journeys */}
 
-                <strong>{formattedDate}</strong>
-              </div>
-            </div>
-          </div>
+              {mode === "existing" && (
 
-          <div className="settings-divider"></div>
+                <div className="journey-select-area">
 
-          {/* =================================================
-              PRIVACY
-              ================================================= */}
+                  <label>
+                    CHOOSE A JOURNEY
+                  </label>
 
-          <div className="settings-block">
-            <div className="settings-heading">
-              <div className="settings-heading-icon">{getPrivacyIcon()}</div>
+                  {loadingJourneys ? (
 
-              <div>
-                <h3>Who can see this?</h3>
-
-                <p>You control who gets to read your moment.</p>
-              </div>
-            </div>
-
-            <div className="privacy-selector">
-              <button
-                type="button"
-                className="privacy-current"
-                onClick={() => setShowPrivacy(!showPrivacy)}
-              >
-                <div className="privacy-current-left">
-                  {getPrivacyIcon()}
-
-                  <span>{getPrivacyLabel()}</span>
-                </div>
-
-                <ChevronDown
-                  size={15}
-                  className={showPrivacy ? "chevron-open" : ""}
-                />
-              </button>
-
-              {showPrivacy && (
-                <div className="privacy-dropdown">
-                  {/* Public */}
-
-                  <button
-                    type="button"
-                    className={`privacy-option ${
-                      privacy === "public" ? "selected" : ""
-                    }`}
-                    onClick={() => {
-                      setPrivacy("public");
-                      setShowPrivacy(false);
-                    }}
-                  >
-                    <Globe2 size={17} />
-
-                    <div>
-                      <strong>Everyone</strong>
-
-                      <span>Anyone can discover this moment.</span>
+                    <div className="journey-loading">
+                      <span className="mini-spinner" />
+                      Loading your journeys...
                     </div>
 
-                    {privacy === "public" && <Check size={15} />}
-                  </button>
+                  ) : journeys.length > 0 ? (
 
-                  {/* Followers */}
+                    <div className="select-wrapper">
 
-                  <button
-                    type="button"
-                    className={`privacy-option ${
-                      privacy === "followers" ? "selected" : ""
-                    }`}
-                    onClick={() => {
-                      setPrivacy("followers");
-                      setShowPrivacy(false);
-                    }}
-                  >
-                    <Users size={17} />
+                      <BookOpen size={16} />
 
-                    <div>
-                      <strong>Followers</strong>
+                      <select
+                        value={selectedJourney}
+                        onChange={(e) =>
+                          setSelectedJourney(e.target.value)
+                        }
+                      >
 
-                      <span>Only people who follow you.</span>
+                        {journeys.map((journey) => (
+                          <option
+                            key={journey._id || journey.id}
+                            value={journey._id || journey.id}
+                          >
+                            {journey.title ||
+                              journey.name ||
+                              "Untitled Journey"}
+                          </option>
+                        ))}
+
+                      </select>
+
+                      <ChevronDown size={15} />
+
                     </div>
 
-                    {privacy === "followers" && <Check size={15} />}
-                  </button>
+                  ) : (
 
-                  {/* Private */}
+                    <div className="no-journeys">
 
-                  <button
-                    type="button"
-                    className={`privacy-option ${
-                      privacy === "private" ? "selected" : ""
-                    }`}
-                    onClick={() => {
-                      setPrivacy("private");
-                      setShowPrivacy(false);
-                    }}
-                  >
-                    <Lock size={17} />
+                      <BookOpen size={18} />
 
-                    <div>
-                      <strong>Only me</strong>
+                      <div>
+                        <strong>No journeys yet</strong>
+                        <span>
+                          Start your first one below.
+                        </span>
+                      </div>
 
-                      <span>Keep this moment private.</span>
                     </div>
 
-                    {privacy === "private" && <Check size={15} />}
-                  </button>
+                  )}
+
                 </div>
+
               )}
+
+              {/* New journey */}
+
+              {mode === "new" && (
+
+                <div className="new-journey-area">
+
+                  <label htmlFor="journey-name">
+                    JOURNEY NAME
+                  </label>
+
+                  <div className="new-journey-input">
+
+                    <Plus size={16} />
+
+                    <input
+                      id="journey-name"
+                      type="text"
+                      placeholder="e.g. My College Journey"
+                      value={newJourneyName}
+                      onChange={(e) =>
+                        setNewJourneyName(e.target.value)
+                      }
+                      maxLength={80}
+                    />
+
+                  </div>
+
+                  <small>
+                    You can add more moments to this journey later.
+                  </small>
+
+                </div>
+
+              )}
+
             </div>
+
+            <div className="settings-divider" />
+
+            {/* DATE */}
+
+            <div className="settings-block">
+
+              <div className="settings-heading">
+
+                <div className="settings-heading-icon">
+                  <CalendarDays size={17} />
+                </div>
+
+                <div>
+                  <span className="panel-kicker">
+                    TIMELINE
+                  </span>
+
+                  <h3>Moment details</h3>
+
+                  <p>
+                    A little context for your memory.
+                  </p>
+                </div>
+
+              </div>
+
+              <div className="date-display">
+
+                <div className="date-icon">
+                  <CalendarDays size={17} />
+                </div>
+
+                <div>
+                  <span>Published date</span>
+                  <strong>{formattedDate}</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="settings-divider" />
+
+            {/* PRIVACY */}
+
+            <div className="settings-block">
+
+              <div className="settings-heading">
+
+                <div className="settings-heading-icon">
+                  {getPrivacyIcon()}
+                </div>
+
+                <div>
+                  <span className="panel-kicker">
+                    VISIBILITY
+                  </span>
+
+                  <h3>Who can see this?</h3>
+
+                  <p>
+                    You control who gets to read your moment.
+                  </p>
+                </div>
+
+              </div>
+
+              <div className="privacy-selector">
+
+                <button
+                  type="button"
+                  className="privacy-current"
+                  onClick={() =>
+                    setShowPrivacy(!showPrivacy)
+                  }
+                >
+
+                  <div className="privacy-current-left">
+                    {getPrivacyIcon()}
+                    <span>{getPrivacyLabel()}</span>
+                  </div>
+
+                  <ChevronDown
+                    size={15}
+                    className={
+                      showPrivacy ? "chevron-open" : ""
+                    }
+                  />
+
+                </button>
+
+                {showPrivacy && (
+
+                  <div className="privacy-dropdown">
+
+                    <button
+                      type="button"
+                      className={`privacy-option ${
+                        privacy === "public"
+                          ? "selected"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setPrivacy("public");
+                        setShowPrivacy(false);
+                      }}
+                    >
+
+                      <Globe2 size={17} />
+
+                      <div>
+                        <strong>Everyone</strong>
+                        <span>
+                          Anyone can discover this moment.
+                        </span>
+                      </div>
+
+                      {privacy === "public" && (
+                        <Check size={15} />
+                      )}
+
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`privacy-option ${
+                        privacy === "followers"
+                          ? "selected"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setPrivacy("followers");
+                        setShowPrivacy(false);
+                      }}
+                    >
+
+                      <Users size={17} />
+
+                      <div>
+                        <strong>Followers</strong>
+                        <span>
+                          Only people who follow you.
+                        </span>
+                      </div>
+
+                      {privacy === "followers" && (
+                        <Check size={15} />
+                      )}
+
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`privacy-option ${
+                        privacy === "private"
+                          ? "selected"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setPrivacy("private");
+                        setShowPrivacy(false);
+                      }}
+                    >
+
+                      <Lock size={17} />
+
+                      <div>
+                        <strong>Only me</strong>
+                        <span>
+                          Keep this moment private.
+                        </span>
+                      </div>
+
+                      {privacy === "private" && (
+                        <Check size={15} />
+                      )}
+
+                    </button>
+
+                  </div>
+
+                )}
+
+              </div>
+
+            </div>
+
+            {/* PHILOSOPHY */}
+
+            <div className="philosophy-card">
+
+              <div className="philosophy-icon">
+                <Heart size={16} />
+              </div>
+
+              <div>
+                <span className="philosophy-label">
+                  MEMOIRE PHILOSOPHY
+                </span>
+
+                <strong>Keep it human.</strong>
+
+                <p>
+                  Write naturally. Your memories belong
+                  to you — not to an algorithm.
+                </p>
+              </div>
+
+            </div>
+
           </div>
 
-          {/* =================================================
-              PHILOSOPHY
-              ================================================= */}
-
-          <div className="philosophy-card">
-            <Heart size={17} />
-
-            <div>
-              <strong>Keep it human.</strong>
-
-              <p>
-                Memoire is built around your voice. Write naturally. Don't write
-                for an algorithm.
-              </p>
-            </div>
-          </div>
         </aside>
+
       </section>
+
     </main>
   );
 }

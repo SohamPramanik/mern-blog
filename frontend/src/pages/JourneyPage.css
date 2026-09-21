@@ -480,3 +480,43 @@
     flex-direction: column;
   }
 }
+/* =========================================================
+   DAY ACTIONS
+========================================================= */
+
+.journey-day-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.journey-day-edit,
+.journey-day-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.journey-day-edit {
+  color: #8a8177;
+  transition: color 0.2s ease;
+}
+
+.journey-day-edit:hover {
+  color: #493c30;
+}
+
+.journey-day-read {
+  color: #493c30;
+  transition:
+    color 0.2s ease,
+    gap 0.2s ease;
+}
+
+.journey-day-read:hover {
+  color: #9a7049;
+  gap: 10px;
+}

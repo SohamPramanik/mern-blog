@@ -1,34 +1,56 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Calendar, Heart, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Calendar,
+  Heart,
+  User,
+  MessageCircle,
+  Send,
+  Trash2,
+} from "lucide-react";
 
 import API from "../services/api";
 import "./PostDetails.css";
 
 function PostDetails() {
   const { id } = useParams();
+  const location = useLocation();
 
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(true);
+
+  const [commentText, setCommentText] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+
+  const [deletingCommentId, setDeletingCommentId] = useState(null);
+
   const [errorMsg, setErrorMsg] = useState("");
+  const [commentError, setCommentError] = useState("");
+
+  const commentsRef = useRef(null);
+
+  const token = localStorage.getItem("token");
+  const currentUserId = localStorage.getItem("userId");
 
   /* =========================================================
      BACKEND URL
-     ========================================================= */
+  ========================================================= */
 
   const getBackendUrl = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    if (!apiUrl) {
-      return "";
-    }
+    if (!apiUrl) return "";
 
     return apiUrl.replace(/\/api\/?$/, "");
   };
 
   /* =========================================================
-     FETCH SINGLE MOMENT
-     ========================================================= */
+     FETCH POST
+  ========================================================= */
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -56,64 +78,84 @@ function PostDetails() {
   }, [id]);
 
   /* =========================================================
-     MEDIA URL
-     ========================================================= */
+     FETCH COMMENTS
+  ========================================================= */
+
+  const fetchComments = async () => {
+    try {
+      setCommentsLoading(true);
+      setCommentError("");
+
+      const res = await API.get(`/posts/${id}/comments`);
+
+      setComments(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+
+      setCommentError(
+        error?.response?.data?.message || "Unable to load comments.",
+      );
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchComments();
+    }
+  }, [id]);
+
+  /* =========================================================
+     SCROLL TO COMMENTS
+  ========================================================= */
+
+  useEffect(() => {
+    if (!loading && location.state?.focusComments && commentsRef.current) {
+      setTimeout(() => {
+        commentsRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 200);
+    }
+  }, [loading, location.state]);
+
+  /* =========================================================
+     MEDIA
+  ========================================================= */
 
   const getMediaUrl = (media) => {
-    if (!media) {
-      return null;
-    }
+    if (!media) return null;
 
     const backendUrl = getBackendUrl();
-
-    /* -------------------------------------------------------
-       CLOUDINARY / NEW MEDIA OBJECT
-       ------------------------------------------------------- */
 
     if (typeof media === "object") {
       const mediaUrl = media.url;
 
-      if (!mediaUrl) {
-        return null;
-      }
+      if (!mediaUrl) return null;
 
       if (mediaUrl.startsWith("http://") || mediaUrl.startsWith("https://")) {
         return mediaUrl;
       }
 
-      if (!backendUrl) {
-        return mediaUrl;
-      }
+      if (!backendUrl) return mediaUrl;
 
       return `${backendUrl}${mediaUrl.startsWith("/") ? "" : "/"}${mediaUrl}`;
     }
 
-    /* -------------------------------------------------------
-       OLD STRING MEDIA FORMAT
-       ------------------------------------------------------- */
-
     if (typeof media === "string") {
-      /* Already a complete URL */
-
       if (media.startsWith("http://") || media.startsWith("https://")) {
         return media;
       }
 
-      /* Backend returns /uploads/filename */
-
       if (media.startsWith("/uploads/")) {
-        if (!backendUrl) {
-          return media;
-        }
+        if (!backendUrl) return media;
 
         return `${backendUrl}${media}`;
       }
 
-      /* Backend returns only filename */
-
-      if (!backendUrl) {
-        return null;
-      }
+      if (!backendUrl) return null;
 
       return `${backendUrl}/uploads/${media}`;
     }
@@ -121,14 +163,8 @@ function PostDetails() {
     return null;
   };
 
-  /* =========================================================
-     MEDIA TYPE
-     ========================================================= */
-
   const getMediaType = (media) => {
-    if (!media) {
-      return "";
-    }
+    if (!media) return "";
 
     if (typeof media === "object") {
       return media.type || "";
@@ -137,14 +173,8 @@ function PostDetails() {
     return "";
   };
 
-  /* =========================================================
-     CHECK VIDEO
-     ========================================================= */
-
   const isVideoFile = (media) => {
-    if (!media) {
-      return false;
-    }
+    if (!media) return false;
 
     const mediaType = getMediaType(media);
 
@@ -158,8 +188,95 @@ function PostDetails() {
   };
 
   /* =========================================================
+     ADD COMMENT
+  ========================================================= */
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+
+    if (!token) {
+      setCommentError("Please sign in to comment.");
+      return;
+    }
+
+    const trimmedComment = commentText.trim();
+
+    if (!trimmedComment) {
+      setCommentError("Comment cannot be empty.");
+      return;
+    }
+
+    try {
+      setCommentLoading(true);
+      setCommentError("");
+
+      const res = await API.post(`/posts/${id}/comments`, {
+        text: trimmedComment,
+      });
+
+      const newComment = res.data?.comment;
+
+      if (newComment) {
+        setComments((prev) => [...prev, newComment]);
+      } else {
+        await fetchComments();
+      }
+
+      setCommentText("");
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+
+      setCommentError(
+        error?.response?.data?.message || "Failed to add comment.",
+      );
+    } finally {
+      setCommentLoading(false);
+    }
+  };
+
+  /* =========================================================
+     DELETE COMMENT
+  ========================================================= */
+
+  const handleDeleteComment = async (commentId) => {
+    if (!token) return;
+
+    const confirmed = window.confirm("Delete this comment?");
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingCommentId(commentId);
+
+      await API.delete(`/posts/${id}/comments/${commentId}`);
+
+      setComments((prev) =>
+        prev.filter((comment) => comment._id !== commentId),
+      );
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+
+      setCommentError(
+        error?.response?.data?.message || "Failed to delete comment.",
+      );
+    } finally {
+      setDeletingCommentId(null);
+    }
+  };
+
+  /* =========================================================
+     CTRL + ENTER TO SUBMIT
+  ========================================================= */
+
+  const handleCommentKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      handleAddComment(e);
+    }
+  };
+
+  /* =========================================================
      LOADING
-     ========================================================= */
+  ========================================================= */
 
   if (loading) {
     return (
@@ -170,8 +287,8 @@ function PostDetails() {
   }
 
   /* =========================================================
-     NOT FOUND / ERROR
-     ========================================================= */
+     NOT FOUND
+  ========================================================= */
 
   if (!post) {
     return (
@@ -191,21 +308,13 @@ function PostDetails() {
   }
 
   /* =========================================================
-     MEDIA
-     ========================================================= */
+     DATA
+  ========================================================= */
 
   const mediaUrl = getMediaUrl(post.media);
   const isVideo = isVideoFile(post.media);
 
-  /* =========================================================
-     LIKES
-     ========================================================= */
-
   const likesCount = post.likesCount ?? post.likes?.length ?? 0;
-
-  /* =========================================================
-     DATE
-     ========================================================= */
 
   const formattedDate = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -217,14 +326,11 @@ function PostDetails() {
 
   /* =========================================================
      RENDER
-     ========================================================= */
+  ========================================================= */
 
   return (
     <main className="post-details-page">
-      {/* =====================================================
-          BACK TO FEED
-          ===================================================== */}
-
+      {/* BACK */}
       <div className="post-details-topbar">
         <Link to="/blogs" className="post-details-back">
           <ArrowLeft size={15} />
@@ -232,14 +338,8 @@ function PostDetails() {
         </Link>
       </div>
 
-      {/* =====================================================
-          ARTICLE
-          ===================================================== */}
-
       <article className="post-details-container">
-        {/* =================================================
-            MEDIA
-            ================================================= */}
+        {/* MEDIA */}
 
         {mediaUrl && (
           <div className="post-details-media-container">
@@ -260,14 +360,8 @@ function PostDetails() {
           </div>
         )}
 
-        {/* =================================================
-            CONTENT
-            ================================================= */}
-
         <div className="post-details-content">
-          {/* =================================================
-              JOURNEY
-              ================================================= */}
+          {/* JOURNEY */}
 
           {post.journey && (
             <div className="post-details-journey">
@@ -275,15 +369,11 @@ function PostDetails() {
             </div>
           )}
 
-          {/* =================================================
-              TITLE
-              ================================================= */}
+          {/* TITLE */}
 
           <h1>{post.title || "Untitled Moment"}</h1>
 
-          {/* =================================================
-              AUTHOR INFO
-              ================================================= */}
+          {/* META */}
 
           <div className="post-details-meta">
             <div className="post-details-author">
@@ -296,24 +386,154 @@ function PostDetails() {
 
             <div className="post-details-date">
               <Calendar size={16} />
-
               <span>{formattedDate}</span>
             </div>
 
             <div className="post-details-likes">
               <Heart size={16} />
-
               <span>{likesCount}</span>
             </div>
           </div>
 
           <div className="post-details-divider" />
 
-          {/* =================================================
-              STORY CONTENT
-              ================================================= */}
+          {/* CONTENT */}
 
           <div className="post-details-text">{post.content}</div>
+
+          {/* =================================================
+              COMMENTS
+          ================================================= */}
+
+          <section className="post-comments" id="comments" ref={commentsRef}>
+            <div className="post-comments-header">
+              <div>
+                <span className="post-comments-label">Conversation</span>
+
+                <h2>
+                  Comments
+                  <span>{comments.length}</span>
+                </h2>
+              </div>
+
+              <MessageCircle size={22} strokeWidth={1.7} />
+            </div>
+
+            {/* COMMENT FORM */}
+
+            {token ? (
+              <form className="post-comment-form" onSubmit={handleAddComment}>
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyDown={handleCommentKeyDown}
+                  placeholder="Write something about this moment..."
+                  maxLength={1000}
+                  rows={4}
+                />
+
+                <div className="post-comment-form-bottom">
+                  <span>
+                    {commentText.length}/1000
+                    <br />
+                    Ctrl + Enter to post
+                  </span>
+
+                  <button
+                    type="submit"
+                    disabled={commentLoading || !commentText.trim()}
+                  >
+                    <Send size={15} />
+
+                    {commentLoading ? "Posting..." : "Post Comment"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="post-comments-login">
+                <MessageCircle size={18} />
+
+                <span>Sign in to join the conversation.</span>
+
+                <Link to="/login">Sign in</Link>
+              </div>
+            )}
+
+            {commentError && (
+              <div className="post-comment-error">{commentError}</div>
+            )}
+
+            {/* COMMENTS LIST */}
+
+            <div className="post-comments-list">
+              {commentsLoading ? (
+                <div className="post-comments-empty">Loading comments...</div>
+              ) : comments.length === 0 ? (
+                <div className="post-comments-empty">
+                  <MessageCircle size={24} />
+
+                  <h3>No comments yet</h3>
+
+                  <p>Be the first to share your thoughts on this moment.</p>
+                </div>
+              ) : (
+                comments.map((comment) => {
+                  const commentUserId = comment.user?._id || comment.user;
+
+                  const isOwnComment =
+                    currentUserId &&
+                    String(commentUserId) === String(currentUserId);
+
+                  const commentDate = comment.createdAt
+                    ? new Date(comment.createdAt).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "";
+
+                  return (
+                    <article key={comment._id} className="post-comment">
+                      <div className="post-comment-avatar">
+                        {comment.user?.avatar ? (
+                          <img src={comment.user.avatar} alt="" />
+                        ) : (
+                          <User size={17} />
+                        )}
+                      </div>
+
+                      <div className="post-comment-body">
+                        <div className="post-comment-top">
+                          <strong>
+                            {comment.user?.username || "Anonymous"}
+                          </strong>
+
+                          <span>{commentDate}</span>
+                        </div>
+
+                        <p>{comment.text}</p>
+
+                        {isOwnComment && (
+                          <button
+                            type="button"
+                            className="post-comment-delete"
+                            onClick={() => handleDeleteComment(comment._id)}
+                            disabled={deletingCommentId === comment._id}
+                          >
+                            <Trash2 size={13} />
+
+                            {deletingCommentId === comment._id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })
+              )}
+            </div>
+          </section>
         </div>
       </article>
     </main>
