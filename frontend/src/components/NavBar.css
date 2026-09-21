@@ -169,7 +169,9 @@
   color: #0f1f2e;
 }
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 850px) {
   .navbar-container {
@@ -194,16 +196,34 @@
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 650px) {
   .navbar-container {
+    width: 94%;
     min-height: 64px;
+    gap: 8px;
   }
 
   .brand-name {
     font-size: 17px;
+    letter-spacing: 1.5px;
+  }
+
+  /* Hide tagline to save space */
+  .brand-tagline {
+    display: none;
+  }
+
+  /* Keep navigation icons compact */
+  .nav-links {
+    gap: 1px;
   }
 
   .nav-links a {
+    padding: 8px 7px;
     font-size: 0;
     gap: 0;
   }
@@ -213,11 +233,66 @@
     height: 18px;
   }
 
+  /* KEEP SIGN IN VISIBLE */
   .login-btn {
-    display: none;
+    display: inline-flex;
+    padding: 8px 9px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Start Writing */
+  .join-btn {
+    display: inline-flex;
+    padding: 9px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    gap: 5px;
+  }
+
+  .join-btn span {
+    font-size: 14px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 390px) {
+  .navbar-container {
+    width: 96%;
+    gap: 5px;
+  }
+
+  .brand-name {
+    font-size: 15px;
+  }
+
+  .nav-links a {
+    padding: 7px 5px;
+  }
+
+  .nav-links a svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .login-btn {
+    padding: 7px 7px;
+    font-size: 11px;
   }
 
   .join-btn {
-    font-size: 12px;
+    padding: 8px 8px;
+    font-size: 10px;
+  }
+
+  .join-btn span {
+    font-size: 13px;
   }
 }
